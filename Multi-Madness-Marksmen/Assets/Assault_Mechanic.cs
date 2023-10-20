@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Assault_Mechanic : MonoBehaviour
 {
-public GameObject bulletPrefab; // Objekt pro střely
+    public GameObject Gun;
+    public GameObject bulletPrefab; // Objekt pro střely
     public Transform firePoint; // Místo, odkud bude střela vystřelována
     public float bulletSpeed = 100.0f; // Rychlost střely v m/s
     public float bulletDrag = 0.1f; // Množství zpomalení střely (Něco jako odpor vzduchu)
@@ -20,27 +21,47 @@ public GameObject bulletPrefab; // Objekt pro střely
     public int fireRate = 10; // Počet výstřelů za vteřinu
 
     private bool reloading = false; // proměná jeslti se zrovna přebíjí nebo ne
+
+   
+
+
+    public int dispersion = 100;
+
+    public Transform gun;
+
     private void Start()
     {
         AmmoCount = maxAmmo; // Nastaví se max počet nábojů na aktuálního počtu nábojů
     }
+    private System.Random random = new System.Random();
 
     void Update()
     {
+        if(Input.GetMouseButtonDown(1))
+        {
+            Gun.GetComponent<Animator>().Play("Test_Gun_In");
+        }
+
+        if(Input.GetMouseButtonUp(1))
+        {
+            Gun.GetComponent<Animator>().Play("Test_Gun_Idle");
+        }
+
         if (reloading) // Pokud zrovna přebíjí tak není možnost vystřelit
         {
             reloadTimer -= Time.deltaTime; // Snížení časovače během přebíjení
 
-        if (reloadTimer <= 0)
-        {
-            reloading = false; // Konec přebíjení
-        }
+            if (reloadTimer <= 0)
+            {
+                reloading = false; // Konec přebíjení
+            }
         } else if (Input.GetMouseButton(0) && Time.time > nextFireTime && AmmoCount > 0) // Pokud už se nepřebíjí tak se hned ptáme jestli nechcou vystřelit
         {
             Shoot(); // Zavolání fce pro výstřel
             nextFireTime = Time.time + 1f / fireRate; // vypočítání času pro další výstřel
             Debug.Log(AmmoCount); // vypsání do konzole pro kontrolu
         }
+
         if(Input.GetKeyDown("r") && !reloading){ // zmáčnutí r pro přebití
             {
                 // Spustí se animace přebíjení
@@ -50,10 +71,27 @@ public GameObject bulletPrefab; // Objekt pro střely
                 reloadTimer = reloadCooldown;
             }
         }
+
     }
 
     void Shoot()
     {
+        //Rozptyl
+
+        if(Input.GetKey(KeyCode.LeftControl)){ // Podmínka že když míří tak má menší rozptyl
+
+        }
+
+        int randomNumber = random.Next(1, 101); // Generuje náhodné číslo od 1 do 100
+        Debug.Log(randomNumber);
+        //firePoint.rotation.x
+
+
+
+
+
+
+
         // Vytvoření instance střely (projektilu)
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
