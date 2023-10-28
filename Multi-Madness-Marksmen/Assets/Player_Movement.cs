@@ -20,6 +20,8 @@ public class Player_Movement : MonoBehaviour
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
 
+    public KeyCode dancekey = KeyCode.D;
+
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
