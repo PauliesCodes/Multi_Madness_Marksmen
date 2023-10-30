@@ -1,0 +1,605 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eed5864476f84ce4b85454db09ca4eaa, type: 3}
+  m_Name: graph_0
+  m_EditorClassIdentifier: 
+  AssetPath: Assets/Textures/cracked-brick-wall.sbsar
+  RawData: {fileID: -244192453324840774, guid: f33cdd8293740f146a0ef425e1d46e87, type: 3}
+  Name: graph_0
+  IsRoot: 1
+  FlagedForDelete: 0
+  GUID: 07619077-d5df-4a21-8256-3a9c22c4f901
+  Index: 0
+  Input:
+  - rid: 2426178655143854089
+  - rid: 2426178655143854090
+  - rid: 2426178655143854091
+  - rid: 2426178655143854092
+  - rid: 2426178655143854093
+  - rid: 2426178655143854094
+  - rid: 2426178655143854095
+  - rid: 2426178655143854096
+  - rid: 2426178655143854097
+  Output:
+  - Index: 0
+    VirtualOutputIndex: 0
+    Description:
+      Identifier: normalScale
+      Label: normalScale
+      Index: 0
+      Type: 0
+      Channel: normalScale
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: 
+  - Index: 1
+    VirtualOutputIndex: 0
+    Description:
+      Identifier: combineNormalAndHeight
+      Label: combineNormalAndHeight
+      Index: 1
+      Type: 4
+      Channel: combineNormalAndHeight
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: 
+  - Index: 2
+    VirtualOutputIndex: 0
+    Description:
+      Identifier: heightScale
+      Label: heightScale
+      Index: 2
+      Type: 0
+      Channel: heightScale
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: 
+  - Index: 3
+    VirtualOutputIndex: 0
+    Description:
+      Identifier: heightLevel
+      Label: heightLevel
+      Index: 3
+      Type: 0
+      Channel: heightLevel
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: 
+  - Index: 4
+    VirtualOutputIndex: 0
+    Description:
+      Identifier: emissionIntensity
+      Label: emissionIntensity
+      Index: 4
+      Type: 0
+      Channel: emissiveIntensity
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: 
+  - Index: 5
+    VirtualOutputIndex: 0
+    Description:
+      Identifier: subsurfaceScattering
+      Label: subsurfaceScattering
+      Index: 5
+      Type: 4
+      Channel: scatter
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: 
+  - Index: 6
+    VirtualOutputIndex: 0
+    Description:
+      Identifier: scatteringDistance
+      Label: scatteringDistance
+      Index: 6
+      Type: 0
+      Channel: scatteringDistance
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: 
+  - Index: 7
+    VirtualOutputIndex: 0
+    Description:
+      Identifier: redShift
+      Label: redShift
+      Index: 7
+      Type: 0
+      Channel: scatteringRedShift
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: 
+  - Index: 8
+    VirtualOutputIndex: 0
+    Description:
+      Identifier: rayleighScattering
+      Label: rayleighScattering
+      Index: 8
+      Type: 0
+      Channel: scatteringRayleigh
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: 
+  - Index: 9
+    VirtualOutputIndex: 0
+    Description:
+      Identifier: absorptionDistance
+      Label: absorptionDistance
+      Index: 9
+      Type: 0
+      Channel: absorptionDistance
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: 
+  - Index: 10
+    VirtualOutputIndex: 0
+    Description:
+      Identifier: indexOfRefraction
+      Label: indexOfRefraction
+      Index: 10
+      Type: 0
+      Channel: IOR
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: 
+  - Index: 11
+    VirtualOutputIndex: 0
+    Description:
+      Identifier: coatIndexOfRefraction
+      Label: coatIndexOfRefraction
+      Index: 11
+      Type: 0
+      Channel: coatIOR
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: 
+  - Index: 12
+    VirtualOutputIndex: 0
+    Description:
+      Identifier: coatNormalScale
+      Label: coatNormalScale
+      Index: 12
+      Type: 0
+      Channel: coatNormalScale
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: 
+  - Index: 13
+    VirtualOutputIndex: 23
+    Description:
+      Identifier: basecolor
+      Label: basecolor
+      Index: 13
+      Type: 8
+      Channel: baseColor
+    OutputTexture: {fileID: 2800000, guid: 7bf674c53fad9e84eadd30a404ebd8f3, type: 3}
+    sRGB: 1
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: opacity
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: _MainTex
+  - Index: 14
+    VirtualOutputIndex: 24
+    Description:
+      Identifier: normal
+      Label: normal
+      Index: 14
+      Type: 8
+      Channel: normal
+    OutputTexture: {fileID: 2800000, guid: aa324d56716175a489d7f0eb13979a6e, type: 3}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 0
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: _BumpMap
+  - Index: 15
+    VirtualOutputIndex: 25
+    Description:
+      Identifier: roughness
+      Label: roughness
+      Index: 15
+      Type: 8
+      Channel: roughness
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: _RoughnessMap
+  - Index: 16
+    VirtualOutputIndex: 26
+    Description:
+      Identifier: metallic
+      Label: metallic
+      Index: 16
+      Type: 8
+      Channel: metallic
+    OutputTexture: {fileID: 2800000, guid: 628e6c84eb06a3245abc430eb947ae25, type: 3}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: roughness
+    InvertAssignedAlpha: 1
+    Flags: 0
+    MaterialTextureTarget: _MetallicGlossMap
+  - Index: 17
+    VirtualOutputIndex: 27
+    Description:
+      Identifier: glossiness
+      Label: glossiness
+      Index: 17
+      Type: 8
+      Channel: glossiness
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: _GlossinessMap
+  - Index: 18
+    VirtualOutputIndex: 28
+    Description:
+      Identifier: height
+      Label: height
+      Index: 18
+      Type: 8
+      Channel: height
+    OutputTexture: {fileID: 2800000, guid: 228b6285ed79a0344a3bc1b925324a5e, type: 3}
+    sRGB: 1
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: _ParallaxMap
+  - Index: 19
+    VirtualOutputIndex: 29
+    Description:
+      Identifier: ambientocclusion
+      Label: ambientocclusion
+      Index: 19
+      Type: 8
+      Channel: ambientOcclusion
+    OutputTexture: {fileID: 2800000, guid: 9963375a6c29e7b479cd3af03ee52a4a, type: 3}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: _OcclusionMap
+  - Index: 20
+    VirtualOutputIndex: 30
+    Description:
+      Identifier: dirtmask
+      Label: dirtmask
+      Index: 20
+      Type: 8
+      Channel: dirtmask
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: 
+  - Index: 21
+    VirtualOutputIndex: 31
+    Description:
+      Identifier: opacity
+      Label: opacity
+      Index: 21
+      Type: 8
+      Channel: opacity
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: _OpacityMap
+  - Index: 22
+    VirtualOutputIndex: 32
+    Description:
+      Identifier: specularlevel
+      Label: specularlevel
+      Index: 22
+      Type: 8
+      Channel: specularLevel
+    OutputTexture: {fileID: 0}
+    sRGB: 0
+    IsVirtual: 0
+    IsAlphaAssignable: 1
+    AlphaChannel: 
+    InvertAssignedAlpha: 0
+    Flags: 0
+    MaterialTextureTarget: _SpecularLevelMap
+  HasPhysicalSize: 0
+  PhysicalSize: {x: 0, y: 0, z: 0}
+  EnablePhysicalSize: 0
+  Thumbnail: 
+  HasThumbnail: 0
+  CurrentStatePreset: 
+  IsRuntimeOnly: 0
+  GenerateAllOutputs: 0
+  GenerateAllMipmaps: 1
+  OutputMaterial: {fileID: 2100000, guid: 5ebbfce0581818840be98959a49e1205, type: 2}
+  DefaultPreset: " <sbspreset pkgurl=\"pkg://Cracked_Brick_Wall\" label=\"\" >\n 
+    <presetinput identifier=\"$outputsize\" uid=\"968859004\" type=\"8\" value=\"10,10\"
+    />\n </sbspreset>\n"
+  MaterialShader: Standard
+  RenderTextures: 0
+  OutputRemaped: 0
+  Presets: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 2426178655143854089
+      type: {class: SubstanceInputInt2, ns: Adobe.Substance.Input, asm: Adobe.Substance}
+      data:
+        Index: 0
+        Description:
+          Identifier: $outputsize
+          Label: $outputsize
+          GuiGroup: 
+          GuiDescription: 
+          Type: 5
+          WidgetType: 0
+        Data: {x: 10, y: 10}
+        NumericalDescription:
+          DefaultValue: {x: 8, y: 8}
+          MinValue: {x: 0, y: 0}
+          MaxValue: {x: 1, y: 1}
+          SliderClamp: 0
+          EnumValueCount: 0
+          EnumValues: []
+    - rid: 2426178655143854090
+      type: {class: SubstanceInputInt, ns: Adobe.Substance.Input, asm: Adobe.Substance}
+      data:
+        Index: 1
+        Description:
+          Identifier: normal_format
+          Label: Normal Format
+          GuiGroup: Technical Parameters
+          GuiDescription: 
+          Type: 4
+          WidgetType: 5
+        Data: 0
+        NumericalDescription:
+          DefaultValue: 0
+          MinValue: 0
+          MaxValue: 0
+          SliderStep: 0
+          SliderClamp: 0
+          LabelFalse: 
+          LabelTrue: 
+          EnumValueCount: 2
+          EnumValues:
+          - Value: 0
+            Label: DirectX
+          - Value: 1
+            Label: OpenGL
+    - rid: 2426178655143854091
+      type: {class: SubstanceInputFloat, ns: Adobe.Substance.Input, asm: Adobe.Substance}
+      data:
+        Index: 2
+        Description:
+          Identifier: density_1
+          Label: Dust - Density
+          GuiGroup: 
+          GuiDescription: 
+          Type: 0
+          WidgetType: 1
+        Data: 0.43
+        NumericalDescription:
+          DefaultValue: 0.43
+          MinValue: 0
+          MaxValue: 1
+          SliderStep: 0
+          SliderClamp: 0
+          EnumValueCount: 0
+          EnumValues: []
+    - rid: 2426178655143854092
+      type: {class: SubstanceInputFloat, ns: Adobe.Substance.Input, asm: Adobe.Substance}
+      data:
+        Index: 3
+        Description:
+          Identifier: dust_roughness_2
+          Label: Dust - Dust Roughness
+          GuiGroup: 
+          GuiDescription: 
+          Type: 0
+          WidgetType: 1
+        Data: 1.65
+        NumericalDescription:
+          DefaultValue: 1.65
+          MinValue: 0
+          MaxValue: 2
+          SliderStep: 0
+          SliderClamp: 0
+          EnumValueCount: 0
+          EnumValues: []
+    - rid: 2426178655143854093
+      type: {class: SubstanceInputFloat, ns: Adobe.Substance.Input, asm: Adobe.Substance}
+      data:
+        Index: 4
+        Description:
+          Identifier: cracks_spread_3
+          Label: Cracks - Cracks Spread
+          GuiGroup: 
+          GuiDescription: 
+          Type: 0
+          WidgetType: 1
+        Data: 0.52
+        NumericalDescription:
+          DefaultValue: 0.52
+          MinValue: 0
+          MaxValue: 1
+          SliderStep: 0
+          SliderClamp: 0
+          EnumValueCount: 0
+          EnumValues: []
+    - rid: 2426178655143854094
+      type: {class: SubstanceInputFloat, ns: Adobe.Substance.Input, asm: Adobe.Substance}
+      data:
+        Index: 5
+        Description:
+          Identifier: cracks_density_4
+          Label: Cracks - Cracks Amount
+          GuiGroup: 
+          GuiDescription: 
+          Type: 0
+          WidgetType: 1
+        Data: 0.9
+        NumericalDescription:
+          DefaultValue: 0.9
+          MinValue: 0
+          MaxValue: 1
+          SliderStep: 0
+          SliderClamp: 0
+          EnumValueCount: 0
+          EnumValues: []
+    - rid: 2426178655143854095
+      type: {class: SubstanceInputFloat, ns: Adobe.Substance.Input, asm: Adobe.Substance}
+      data:
+        Index: 6
+        Description:
+          Identifier: cracks_damage_detail_5
+          Label: Cracks - Cracks Damage Detail
+          GuiGroup: 
+          GuiDescription: 
+          Type: 0
+          WidgetType: 1
+        Data: 1
+        NumericalDescription:
+          DefaultValue: 1
+          MinValue: 0
+          MaxValue: 1
+          SliderStep: 0
+          SliderClamp: 0
+          EnumValueCount: 0
+          EnumValues: []
+    - rid: 2426178655143854096
+      type: {class: SubstanceInputFloat3, ns: Adobe.Substance.Input, asm: Adobe.Substance}
+      data:
+        Index: 7
+        Description:
+          Identifier: cracks_color_6
+          Label: Cracks - Cracks Color
+          GuiGroup: 
+          GuiDescription: 
+          Type: 2
+          WidgetType: 3
+        Data: {x: 0.190723, y: 0.126772, z: 0.0953536}
+        NumericalDescription:
+          DefaultValue: {x: 0.190723, y: 0.126772, z: 0.0953536}
+          MinValue: {x: 0, y: 0, z: 0}
+          MaxValue: {x: 0, y: 0, z: 0}
+          SliderStep: 0
+          SliderClamp: 0
+          EnumValueCount: 0
+          EnumValues: []
+    - rid: 2426178655143854097
+      type: {class: SubstanceInputFloat, ns: Adobe.Substance.Input, asm: Adobe.Substance}
+      data:
+        Index: 8
+        Description:
+          Identifier: cracks_color_opacity_7
+          Label: Cracks - Cracks Color Opacity
+          GuiGroup: 
+          GuiDescription: 
+          Type: 0
+          WidgetType: 1
+        Data: 0.44
+        NumericalDescription:
+          DefaultValue: 0.44
+          MinValue: 0
+          MaxValue: 1
+          SliderStep: 0
+          SliderClamp: 0
+          EnumValueCount: 0
+          EnumValues: []
