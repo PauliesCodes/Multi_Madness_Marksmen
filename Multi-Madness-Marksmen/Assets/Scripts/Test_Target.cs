@@ -6,7 +6,7 @@ public class Test_Target : MonoBehaviour
 {
     public float health = 50f;
 
-    public void TakeDamage(float amount){
+    /*public void TakeDamage(float amount){
 
         health -= amount;
 
@@ -23,5 +23,5 @@ public class Test_Target : MonoBehaviour
         Destroy(gameObject);
 
     }
-
+*/
 }

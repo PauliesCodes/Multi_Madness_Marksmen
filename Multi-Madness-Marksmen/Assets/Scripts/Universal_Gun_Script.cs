@@ -1,12 +1,9 @@
-using System.Diagnostics.Contracts;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.RestService;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class ak_script : MonoBehaviour
+public class Universal_Gun_Script : MonoBehaviour
 {
-
 [Header("Settings")]
     public float normalDamage = 10f;
     public float headDemage = 30f;

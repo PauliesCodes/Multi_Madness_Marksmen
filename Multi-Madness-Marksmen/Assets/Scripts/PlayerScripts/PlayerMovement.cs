@@ -20,7 +20,6 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
-
     public KeyCode sprintKey = KeyCode.LeftControl;
 
     [Header("Ground Check")]
