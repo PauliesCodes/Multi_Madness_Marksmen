@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 using UnityEngine;
 
 public class Universal_Gun_Script : MonoBehaviour
@@ -17,6 +18,8 @@ public class Universal_Gun_Script : MonoBehaviour
     public float recoilForce = 1.0f;
     public float recoilDuration = 0.1f;
     public bool fullAuto = true;
+    public bool shootGun = false;
+    public float shootgunRounds = 10f;
     
     [Header("Keybinds")]
     public KeyCode shootKey = KeyCode.Mouse0;
@@ -27,10 +30,21 @@ public class Universal_Gun_Script : MonoBehaviour
     [Header("Components")]
 
     public GameObject impactEffect;
+    public GameObject playerHitEffect;
     public ParticleSystem MuzzleFlash;
     public GameObject shootingDirection;
-    public GameObject recoilScript;
     public AudioSource soundEffect;
+    public Camera gunCam;
+    Recoil_Script recoil;
+
+    [Header("Animations")]
+    //public Animation reloadAnim;
+
+    [Header("Aim Settings")]
+    private Vector3 originalPos;
+    public Vector3 aimPos;
+    public float aimSpeed = 8f;
+    private bool isAiming;
 
     private float nextTimeToFire = 0f;
 
@@ -40,25 +54,42 @@ public class Universal_Gun_Script : MonoBehaviour
 
     private float currentAmmo;
 
+
+    private int killCount = 0;
     static bool semiFire = true;
 
+    private void Aim(){
+
+        if(Input.GetKey(aimKey) && !reloading){ // Hrac ztaměřil, zbran se mu dá k hlave a bude střílet pořesněji
+
+        //dispersion = dispersion * aimDispersionMultiplier;
+            transform.localPosition = Vector3.Lerp(transform.localPosition, aimPos, Time.deltaTime * aimSpeed);
+            isAiming = true;
+            gunCam.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, 40, Time.deltaTime * aimSpeed);
+        } else {
+
+            transform.localPosition = Vector3.Lerp(transform.localPosition, originalPos, Time.deltaTime * aimSpeed);
+            isAiming = false;
+            gunCam.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, 60, Time.deltaTime * aimSpeed);
+        }
+
+    }
     void Start()
     {
         currentAmmo = magazineSize;
+
+        recoil = GetComponent<Recoil_Script>();
     }
 
     void Update()
     {
-        if(fullAuto){
-            if(Input.GetKeyDown(fireMode)){
-                semiFire = !semiFire;
-                Debug.Log("semiFire is on "+semiFire);
-            }
-        }
+        Aim();
 
         if(Input.GetKeyDown(reloadKey) && !reloading){
 
             Debug.Log("Reloading....");
+
+            //reloadAnim.Play();
 
             reloading = true;
 
@@ -66,18 +97,7 @@ public class Universal_Gun_Script : MonoBehaviour
 
             reloadTimer = reloadTime;
 
-        }
-
-        if(Input.GetKeyDown(aimKey)){ // Hrac ztaměřil, zbran se mu dá k hlave a bude střílet pořesněji
-
-            dispersion = dispersion * aimDispersionMultiplier;
-            Debug.Log("Im Aiming now");
-        }
-        if(Input.GetKeyUp(aimKey)){
-
-            dispersion = dispersion / aimDispersionMultiplier;
-            Debug.Log("Im Aiming no more :/");
-        }
+        }        
 
         if(reloading){
 
@@ -92,32 +112,57 @@ public class Universal_Gun_Script : MonoBehaviour
         }
         else // bylo by lepší přepsat aby se prvně ptalo na to jestli chceme stříoet až pak na to jkesrli jksou naboje OPTRIMALIZACEE
         {
-            if(currentAmmo > 0){
-                 /// Tento spoefdek optiflůaalmsdaskmdkoasdjokfdflaskhjnflksdhn optimalizovsat idk jak ted ale určo to jde
-                 /// plsky oopravit díkyyyyy
+            if(fullAuto){
+
+                if(Input.GetKeyDown(fireMode)){
+                    semiFire = !semiFire;
+                    Debug.Log("semiFire is on "+semiFire);
+                }
+
+                //Zde ptání na střelbu při full auto na on
                 if(semiFire){
-                    if (Input.GetKeyDown(shootKey) && Time.time >= nextTimeToFire){ //otázka jestli už možu vystzřelit je tlacitko a zarovne je cas :D
+                    if(Input.GetKeyDown(shootKey) && currentAmmo > 0 && Time.time >= nextTimeToFire){
+
                         nextTimeToFire = Time.time + 1f/fireRate; // Zde jako moc se muže pufat, firerate je v výstřelech za s
                         Shoot(); //Zavolání fce Shooot
+                        //Zde Recoil Script, ale ten nemám :DS/"SLDAS/§nkmůlasdf§sdfnklSYFNKLDX"!
+                        recoil.ApplyRecoil(isAiming);
 
                         soundEffect.Play(); // Beng Beng saund zahrání
                         currentAmmo--;
                         Debug.Log(currentAmmo);
                     }
-                } 
-                else 
-                {
-                    if (Input.GetKey(shootKey) && Time.time >= nextTimeToFire){ //otázka jestli už možu vystzřelit je tlacitko a zarovne je cas :D
+                } else {
+                    if(Input.GetKey(shootKey) && currentAmmo > 0 && Time.time >= nextTimeToFire){
+
                         nextTimeToFire = Time.time + 1f/fireRate; // Zde jako moc se muže pufat, firerate je v výstřelech za s
                         Shoot(); //Zavolání fce Shooot
+                        //Zde Recoil Script, ale ten nemám :DS/"SLDAS/§nkmůlasdf§sdfnklSYFNKLDX"!
+                        recoil.ApplyRecoil(isAiming);
 
                         soundEffect.Play(); // Beng Beng saund zahrání
                         currentAmmo--;
                         Debug.Log(currentAmmo);
                     }
                 }
+
+            } else if(shootGun){
+                //Zde ptání na střelnu když je brokovnice mode
+                    if(Input.GetKeyDown(shootKey) && currentAmmo > 0 && Time.time >= nextTimeToFire){
+
+                        nextTimeToFire = Time.time + 1f/fireRate; // Zde jako moc se muže pufat, firerate je v výstřelech za s
+
+                        for(int i = 0; i < shootgunRounds; i++){
+                            Shoot(); //Zavolání fce Shooot
+                        }
+                        //Zde Recoil Script, ale ten nemám :DS/"SLDAS/§nkmůlasdf§sdfnklSYFNKLDX"!
+                        recoil.ApplyRecoil(isAiming);
+
+                        soundEffect.Play(); // Beng Beng saund zahrání
+                        currentAmmo--;
+                        Debug.Log(currentAmmo);
+                    }
             }
-                
         }
     }
 
@@ -128,11 +173,11 @@ public class Universal_Gun_Script : MonoBehaviour
 
         MuzzleFlash.Play();
 
-
+        int layer = 90; // Nějhkaé random číslo vrstvy jelikož jich mít tolik rozjofně nebudu tak to uděšlám takoto asi to jde i jinak ale ted idk casenm se muze opravit
 
         Vector3 dispersion_vector = new Vector3(Random.Range(0, dispersion), Random.Range(0, dispersion), Random.Range(0, dispersion));
 
-        if (Physics.Raycast(shootingDirection.transform.position, shootingDirection.transform.forward + dispersion_vector, out hit, range)){
+        if (Physics.Raycast(shootingDirection.transform.position, shootingDirection.transform.forward + dispersion_vector, out hit, range)){ // Or dispersion vectopr
 
             Healt_Controler target = hit.transform.GetComponent<Healt_Controler>();
 
@@ -142,12 +187,13 @@ public class Universal_Gun_Script : MonoBehaviour
 
                 if(hit.rigidbody != null){
 
-                hit.rigidbody.AddForce(-hit.normal * impactForce);
+                    layer = hit.collider.gameObject.layer;
+
+                //hit.rigidbody.AddForce(-hit.normal * impactForce);
 
                 float heightDiference = hit.point.y - position.transform.position.y; //zjištění jestli dostal čočku xd
 
                 if (heightDiference > 0.5f) {
-
                     //Byla zasažena hlava
                     got_kill = target.TakeDamage(headDemage);
                     Debug.Log("Hlava" + headDemage);
@@ -156,10 +202,21 @@ public class Universal_Gun_Script : MonoBehaviour
                     got_kill = target.TakeDamage(normalDamage);
                     Debug.Log("Telo" + normalDamage);
                 }
+                if(got_kill){
+
+                    killCount++;
+                    Debug.Log(killCount);
+                }
             }
             }
 
-            GameObject impactGO = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal)); // Efeeeekt particle na místo výstřelu
+            GameObject impactGO;
+
+            if(layer == 8){
+                impactGO = Instantiate(playerHitEffect, hit.point, Quaternion.LookRotation(hit.normal)); // Efeeeekt particle na místo výstřelu
+            } else {
+                impactGO = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal)); // Efeeeekt particle na místo výstřelu
+            }
             Destroy(impactGO, 1f);
 
         }

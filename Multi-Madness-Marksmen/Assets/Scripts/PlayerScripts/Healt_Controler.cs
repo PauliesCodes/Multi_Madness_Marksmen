@@ -13,10 +13,14 @@ public class Healt_Controler : MonoBehaviour
 
         health -= amount;
 
+        Debug.Log("I have "+health+" hp");
+
         if(health <= 0f){
 
             did_it_die = true; // Pokud hráč umřel tak se hráči co ho zabil vrátí bool s informací jesrtli zabil nebo ne
-    
+
+            Debug.Log("Ive been kiled");
+
             Die();
             //Zde se napíše to co se stane s hráčem po smrti
             //Zablokuje se movement
