@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Versioning;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Universal_Gun_Script : MonoBehaviour
@@ -9,17 +10,19 @@ public class Universal_Gun_Script : MonoBehaviour
     public float normalDamage = 10f;
     public float headDemage = 30f;
     public float range = 100f;
-    public float dispersion = 1f;
-    public float aimDispersionMultiplier = 0.5f;
+    public float normalDispersion = 0.5f;
+    public float aimDispersion = 0.1f;
     public float impactForce = 30f;
     public float fireRate = 8f;
     public float reloadTime = 2f;
     public float magazineSize = 30f;
-    public float recoilForce = 1.0f;
-    public float recoilDuration = 0.1f;
+    //public float recoilForce = 1.0f;
+    //public float recoilDuration = 0.1f;
     public bool fullAuto = true;
     public bool shootGun = false;
     public float shootgunRounds = 10f;
+    public float standartFOV = 60f;
+    public float aimFOV = 40f;
     
     [Header("Keybinds")]
     public KeyCode shootKey = KeyCode.Mouse0;
@@ -29,6 +32,7 @@ public class Universal_Gun_Script : MonoBehaviour
 
     [Header("Components")]
 
+    public TrailRenderer bulletTrail;
     public GameObject impactEffect;
     public GameObject playerHitEffect;
     public ParticleSystem MuzzleFlash;
@@ -54,6 +58,7 @@ public class Universal_Gun_Script : MonoBehaviour
 
     private float currentAmmo;
 
+    private float dispersion;
 
     private int killCount = 0;
     static bool semiFire = true;
@@ -62,15 +67,18 @@ public class Universal_Gun_Script : MonoBehaviour
 
         if(Input.GetKey(aimKey) && !reloading){ // Hrac ztaměřil, zbran se mu dá k hlave a bude střílet pořesněji
 
-        //dispersion = dispersion * aimDispersionMultiplier;
+            dispersion = aimDispersion;
             transform.localPosition = Vector3.Lerp(transform.localPosition, aimPos, Time.deltaTime * aimSpeed);
             isAiming = true;
-            gunCam.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, 40, Time.deltaTime * aimSpeed);
+            gunCam.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, aimFOV, Time.deltaTime * aimSpeed);
+
         } else {
 
+            dispersion = normalDispersion;
             transform.localPosition = Vector3.Lerp(transform.localPosition, originalPos, Time.deltaTime * aimSpeed);
             isAiming = false;
-            gunCam.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, 60, Time.deltaTime * aimSpeed);
+            gunCam.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, standartFOV, Time.deltaTime * aimSpeed);
+
         }
 
     }
@@ -162,6 +170,18 @@ public class Universal_Gun_Script : MonoBehaviour
                         currentAmmo--;
                         Debug.Log(currentAmmo);
                     }
+            } else {
+                if(Input.GetKeyDown(shootKey) && currentAmmo > 0 && Time.time >= nextTimeToFire){
+
+                        nextTimeToFire = Time.time + 1f/fireRate; // Zde jako moc se muže pufat, firerate je v výstřelech za s
+                        Shoot(); //Zavolání fce Shooot
+                        //Zde Recoil Script, ale ten už mám xdasdasdasdasdasdads :DS/"SLDAS/§nkmůlasdf§sdfnklSYFNKLDX"!
+                        recoil.ApplyRecoil(isAiming);
+
+                        soundEffect.Play(); // Beng Beng saund zahrání
+                        currentAmmo--;
+                        Debug.Log(currentAmmo);
+                    }
             }
         }
     }
@@ -175,19 +195,21 @@ public class Universal_Gun_Script : MonoBehaviour
 
         int layer = 90; // Nějhkaé random číslo vrstvy jelikož jich mít tolik rozjofně nebudu tak to uděšlám takoto asi to jde i jinak ale ted idk casenm se muze opravit
 
-        Vector3 dispersion_vector = new Vector3(Random.Range(0, dispersion), Random.Range(0, dispersion), Random.Range(0, dispersion));
+        Vector3 dispersion_vector = new Vector3(Random.Range(-dispersion, dispersion), Random.Range(-dispersion, dispersion), Random.Range(-dispersion, dispersion));
 
         if (Physics.Raycast(shootingDirection.transform.position, shootingDirection.transform.forward + dispersion_vector, out hit, range)){ // Or dispersion vectopr
+
+            TrailRenderer trail = Instantiate(bulletTrail, shootingDirection.transform.forward + dispersion_vector, Quaternion.identity);
 
             Healt_Controler target = hit.transform.GetComponent<Healt_Controler>();
 
             Rigidbody position = hit.transform.GetComponent<Rigidbody>();
 
+            layer = hit.collider.gameObject.layer;
+
+            StartCoroutine(SpawnTrail(trail, hit, layer));
+
             if(target != null){
-
-                if(hit.rigidbody != null){
-
-                    layer = hit.collider.gameObject.layer;
 
                 //hit.rigidbody.AddForce(-hit.normal * impactForce);
 
@@ -208,7 +230,6 @@ public class Universal_Gun_Script : MonoBehaviour
                     Debug.Log(killCount);
                 }
             }
-            }
 
             GameObject impactGO;
 
@@ -218,9 +239,29 @@ public class Universal_Gun_Script : MonoBehaviour
                 impactGO = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal)); // Efeeeekt particle na místo výstřelu
             }
             Destroy(impactGO, 1f);
-
+            
         }
     }
+
+    private IEnumerator SpawnTrail(TrailRenderer Trail, RaycastHit Hit, int layer)
+    {
+
+        float time = 0;
+
+        Vector3 startPosition = shootingDirection.transform.position;
+
+        while(time < 1){
+            Trail.transform.position = Vector3.Lerp(startPosition, Hit.point, time);
+            time += Time.deltaTime * Time.time * 3f;
+
+            yield return null;
+        }
+
+        Trail.transform.position = Hit.point;
+        Destroy(Trail.gameObject, Trail.time);
+    }
+}
+
 /* // Pokus o recoil asi změním ted není čas, wepon swing better to do xd
 
     void Recoil (){
@@ -236,4 +277,4 @@ public class Universal_Gun_Script : MonoBehaviour
     }*/ 
 
     
-}
+

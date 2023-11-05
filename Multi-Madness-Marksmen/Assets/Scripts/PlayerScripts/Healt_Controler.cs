@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Healt_Controler : MonoBehaviour
 {
-
     public float health = 100f;
 
     public bool TakeDamage(float amount){
