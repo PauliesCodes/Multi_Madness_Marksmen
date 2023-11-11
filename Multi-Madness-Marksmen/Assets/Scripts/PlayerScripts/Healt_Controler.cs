@@ -31,7 +31,19 @@ public class Healt_Controler : MonoBehaviour
 
     void Die(){
 
-        Destroy(gameObject);
+        /*Dnes konec, ale pro příštrě zde dát ot
+         že jakmile umře hráč ve hře tak mu to disablne 
+         controls a ukáže myš, hodí to jednoduchou animaci 
+         kamery že se její pozice dá aby směřovala dolú a 
+         vystoupá nahoru pak to hodí death screan kde bude 
+         výběr zbraní (jedu z 3 si bude moct člověk vybrat)
+         a také to napíše nějakou hlášku
+         nude možnost odejít kdy to bude v singlu 
+         pude do menu nebo v multaku to odpojí a 
+         hodí do menu. NIKDY nemazat gameobject
+         moc erroru moc bolest hlavy ://///ú
+        */
+        
     }
 
 

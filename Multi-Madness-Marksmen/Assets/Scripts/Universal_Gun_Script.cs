@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Versioning;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Universal_Gun_Script : MonoBehaviour
 {
@@ -56,12 +57,15 @@ public class Universal_Gun_Script : MonoBehaviour
 
     private bool reloading = false;
 
-    private float currentAmmo;
+    public float currentAmmo;
 
     private float dispersion;
 
-    private int killCount = 0;
+    public int killCount = 0;
+    public bool wasAiming = false;
     static bool semiFire = true;
+
+    private bool allreadyKilled = false;
 
     private void Aim(){
 
@@ -77,6 +81,7 @@ public class Universal_Gun_Script : MonoBehaviour
             dispersion = normalDispersion;
             transform.localPosition = Vector3.Lerp(transform.localPosition, originalPos, Time.deltaTime * aimSpeed);
             isAiming = false;
+            wasAiming = false;
             gunCam.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, standartFOV, Time.deltaTime * aimSpeed);
 
         }
@@ -101,8 +106,6 @@ public class Universal_Gun_Script : MonoBehaviour
 
             reloading = true;
 
-            currentAmmo = magazineSize;
-
             reloadTimer = reloadTime;
 
         }        
@@ -114,6 +117,7 @@ public class Universal_Gun_Script : MonoBehaviour
             if(reloadTimer <= 0){
 
                 reloading = false;
+                currentAmmo = magazineSize;
                 Debug.Log("Im done reloading");
             }
 
@@ -133,6 +137,7 @@ public class Universal_Gun_Script : MonoBehaviour
 
                         nextTimeToFire = Time.time + 1f/fireRate; // Zde jako moc se muže pufat, firerate je v výstřelech za s
                         Shoot(); //Zavolání fce Shooot
+                        allreadyKilled = false;
                         //Zde Recoil Script, ale ten nemám :DS/"SLDAS/§nkmůlasdf§sdfnklSYFNKLDX"!
                         recoil.ApplyRecoil(isAiming);
 
@@ -145,6 +150,7 @@ public class Universal_Gun_Script : MonoBehaviour
 
                         nextTimeToFire = Time.time + 1f/fireRate; // Zde jako moc se muže pufat, firerate je v výstřelech za s
                         Shoot(); //Zavolání fce Shooot
+                        allreadyKilled = false;
                         //Zde Recoil Script, ale ten nemám :DS/"SLDAS/§nkmůlasdf§sdfnklSYFNKLDX"!
                         recoil.ApplyRecoil(isAiming);
 
@@ -164,6 +170,7 @@ public class Universal_Gun_Script : MonoBehaviour
                             Shoot(); //Zavolání fce Shooot
                         }
                         //Zde Recoil Script, ale ten nemám :DS/"SLDAS/§nkmůlasdf§sdfnklSYFNKLDX"!
+                        allreadyKilled = false;
                         recoil.ApplyRecoil(isAiming);
 
                         soundEffect.Play(); // Beng Beng saund zahrání
@@ -175,6 +182,7 @@ public class Universal_Gun_Script : MonoBehaviour
 
                         nextTimeToFire = Time.time + 1f/fireRate; // Zde jako moc se muže pufat, firerate je v výstřelech za s
                         Shoot(); //Zavolání fce Shooot
+                        allreadyKilled = false;
                         //Zde Recoil Script, ale ten už mám xdasdasdasdasdasdads :DS/"SLDAS/§nkmůlasdf§sdfnklSYFNKLDX"!
                         recoil.ApplyRecoil(isAiming);
 
@@ -224,10 +232,14 @@ public class Universal_Gun_Script : MonoBehaviour
                     got_kill = target.TakeDamage(normalDamage);
                     Debug.Log("Telo" + normalDamage);
                 }
-                if(got_kill){
+                if(got_kill && !allreadyKilled){
 
                     killCount++;
+                    allreadyKilled = true;
                     Debug.Log(killCount);
+                    if(isAiming){
+                        wasAiming = true;
+                    }
                 }
             }
 
