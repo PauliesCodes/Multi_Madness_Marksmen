@@ -50,7 +50,11 @@ public class Universal_Gun_Script : MonoBehaviour
     public Vector3 aimPos;
     public float aimSpeed = 8f;
     private bool isAiming;
-
+    public bool sniperScope;
+    public GameObject scope;
+    public GameObject sniperRifel;
+    public Camera zoom;
+    public float positionThreshold;
     private float nextTimeToFire = 0f;
 
     private double reloadTimer = 0.0;
@@ -66,7 +70,6 @@ public class Universal_Gun_Script : MonoBehaviour
     static bool semiFire = true;
 
     private bool allreadyKilled = false;
-
     private void Aim(){
 
         if(Input.GetKey(aimKey) && !reloading){ // Hrac ztaměřil, zbran se mu dá k hlave a bude střílet pořesněji
@@ -75,7 +78,11 @@ public class Universal_Gun_Script : MonoBehaviour
             transform.localPosition = Vector3.Lerp(transform.localPosition, aimPos, Time.deltaTime * aimSpeed);
             isAiming = true;
             gunCam.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, aimFOV, Time.deltaTime * aimSpeed);
-
+            if(sniperScope && Vector3.Distance(transform.localPosition, aimPos) < positionThreshold){
+                scope.SetActive(true);
+                sniperRifel.SetActive(false);
+                zoom.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, aimFOV, Time.deltaTime * aimSpeed);
+            }
         } else {
 
             dispersion = normalDispersion;
@@ -83,7 +90,11 @@ public class Universal_Gun_Script : MonoBehaviour
             isAiming = false;
             wasAiming = false;
             gunCam.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, standartFOV, Time.deltaTime * aimSpeed);
-
+            if(sniperScope && Vector3.Distance(transform.localPosition, aimPos) > positionThreshold){
+                scope.SetActive(false);
+                sniperRifel.SetActive(true);
+                zoom.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, standartFOV, Time.deltaTime * aimSpeed);
+            }
         }
 
     }
