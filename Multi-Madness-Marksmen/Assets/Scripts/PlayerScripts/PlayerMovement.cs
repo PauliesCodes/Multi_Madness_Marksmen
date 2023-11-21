@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     public float jumpCooldown;
     public float airMultiplier;
     bool readyToJump = true;
+    public bool isEnabled = true;
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -47,40 +48,44 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        if(isEnabled){
 
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
-        SpeedControl();
+            grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
-        if(Input.GetKey(jumpKey) && readyToJump && grounded){
+            horizontalInput = Input.GetAxisRaw("Horizontal");
+            verticalInput = Input.GetAxisRaw("Vertical");
+            SpeedControl();
 
-            readyToJump = false;
+            if(Input.GetKey(jumpKey) && readyToJump && grounded){
 
-            Jump();
+                readyToJump = false;
 
-            Invoke(nameof(ResetJump), jumpCooldown);
+                Jump();
+
+                Invoke(nameof(ResetJump), jumpCooldown);
+            }
+
+            if(Input.GetKeyDown(sprintKey)){
+                moveSpeed = moveSpeed * sprintSpeedMultiplayer;
+            }
+            if(Input.GetKeyUp(sprintKey)){
+                moveSpeed = moveSpeed / sprintSpeedMultiplayer;
+            }
+
+            if(grounded){
+                rb.drag = groundDrag;
+            }
+            else
+            {
+                rb.drag =  0;
+            }
         }
-
-        if(Input.GetKeyDown(sprintKey)){
-            moveSpeed = moveSpeed * sprintSpeedMultiplayer;
-        }
-        if(Input.GetKeyUp(sprintKey)){
-            moveSpeed = moveSpeed / sprintSpeedMultiplayer;
-        }
-
-        if(grounded){
-            rb.drag = groundDrag;
-        }
-        else
-        {
-            rb.drag =  0;
-        }
- 
     }
 
     private void FixedUpdate() {
-        MovePlayer();
+        if(isEnabled){
+            MovePlayer();
+        }    
     }
 
     private void MovePlayer(){

@@ -24,6 +24,7 @@ public class Universal_Gun_Script : MonoBehaviour
     public float shootgunRounds = 10f;
     public float standartFOV = 60f;
     public float aimFOV = 40f;
+    public bool isEnabled = true;
     
     [Header("Keybinds")]
     public KeyCode shootKey = KeyCode.Mouse0;
@@ -107,7 +108,8 @@ public class Universal_Gun_Script : MonoBehaviour
 
     void Update()
     {
-        Aim();
+        if(isEnabled){
+             Aim();
 
         if(Input.GetKeyDown(reloadKey) && !reloading){
 
@@ -203,6 +205,7 @@ public class Universal_Gun_Script : MonoBehaviour
                     }
             }
         }
+        }
     }
 
     void Shoot (){
@@ -220,9 +223,12 @@ public class Universal_Gun_Script : MonoBehaviour
 
             TrailRenderer trail = Instantiate(bulletTrail, shootingDirection.transform.forward + dispersion_vector, Quaternion.identity);
 
-            Healt_Controler target = hit.transform.GetComponent<Healt_Controler>();
+            PlayerControler target = hit.transform.GetComponent<PlayerControler>(); // Něco je zde špatně idk co
+            // po hitu se nedá player controler, je to shit protože jak je kravina prázdný game object tak to dělá neplechu, zkus dát jako hlavní kravinu model toho hráče tomu dej PlayerControler atd, u toho modelu máš rovnou riugiutbody a capsule colider to by mohlo fachat a taky by to asi vyřešilo problém s sekavýám movementem ale to se uvidí, ok díky jí jdu spat gn xdddddd
 
             Rigidbody position = hit.transform.GetComponent<Rigidbody>();
+
+            Debug.Log(position);
 
             layer = hit.collider.gameObject.layer;
 
@@ -252,7 +258,7 @@ public class Universal_Gun_Script : MonoBehaviour
                         wasAiming = true;
                     }
                 }
-            }
+            }Debug.Log("Its not target");
 
             GameObject impactGO;
 
