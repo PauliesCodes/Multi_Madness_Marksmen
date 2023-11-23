@@ -223,7 +223,7 @@ public class Universal_Gun_Script : MonoBehaviour
 
             TrailRenderer trail = Instantiate(bulletTrail, shootingDirection.transform.forward + dispersion_vector, Quaternion.identity);
 
-            PlayerControler target = hit.transform.GetComponent<PlayerControler>(); // Něco je zde špatně idk co
+            Healt_Controler target = hit.transform.GetComponent<Healt_Controler>(); // Něco je zde špatně idk co
             // po hitu se nedá player controler, je to shit protože jak je kravina prázdný game object tak to dělá neplechu, zkus dát jako hlavní kravinu model toho hráče tomu dej PlayerControler atd, u toho modelu máš rovnou riugiutbody a capsule colider to by mohlo fachat a taky by to asi vyřešilo problém s sekavýám movementem ale to se uvidí, ok díky jí jdu spat gn xdddddd
 
             Rigidbody position = hit.transform.GetComponent<Rigidbody>();
@@ -237,6 +237,8 @@ public class Universal_Gun_Script : MonoBehaviour
             if(target != null){
 
                 //hit.rigidbody.AddForce(-hit.normal * impactForce);
+
+
 
                 float heightDiference = hit.point.y - position.transform.position.y; //zjištění jestli dostal čočku xd
 
@@ -258,8 +260,9 @@ public class Universal_Gun_Script : MonoBehaviour
                         wasAiming = true;
                     }
                 }
-            }Debug.Log("Its not target");
-
+            } else {
+                Debug.Log("Its not target");
+            }
             GameObject impactGO;
 
             if(layer == 8){

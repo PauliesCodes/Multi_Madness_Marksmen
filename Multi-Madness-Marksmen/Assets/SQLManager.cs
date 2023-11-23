@@ -9,6 +9,10 @@ using UnityEngine.UI;
 using TMPro;
 using MySql.Data.MySqlClient;
 
+using System;
+using System.Security.Cryptography;
+using System.Text.RegularExpressions;
+using UnityEngine.Networking;
 
 
 public class SQLManager : MonoBehaviour
@@ -24,6 +28,17 @@ public class SQLManager : MonoBehaviour
     private string conectionString;
     private MySqlConnection MS_Conection;
     private MySqlCommand MS_Command;
+
+
+    private string secretKey = "mySecretKey";
+    public string addScoreURL = 
+        "http://localhost/HighScoreGame/addscore.php?";
+    public string highscoreURL = 
+         "http://localhost/HighScoreGame/display.php";
+    public Text nameTextInput;
+    public Text scoreTextInput;
+    public Text nameResultText;
+    public Text scoreResultText;
 
     void Start()
     {
@@ -91,7 +106,7 @@ public class SQLManager : MonoBehaviour
 
     public void conection(){
 
-        conectionString = "Server = sql.freedb.tech ; Database = freedb_MultiMadnessMarksmen ; User = freedb_clienttt ; Password = zxuueK#8%GS&5nE; Charset = utf8;";
+        conectionString = "Server = mysql.pearhost.cz ; Database = 7honza_1 ; User = mysql_7honza ; Password = lyx3k5lGR; Charset = utf8;";
         MS_Conection = new MySqlConnection(conectionString);
         MS_Conection.Open();
         if (MS_Conection.State == System.Data.ConnectionState.Open)
@@ -103,5 +118,54 @@ public class SQLManager : MonoBehaviour
             Debug.Log("Failed to connect to MySQL database!");
         }
     }
+    
+IEnumerator GetScores()
+{
+	UnityWebRequest hs_get = UnityWebRequest.Get(highscoreURL);
+	yield return hs_get.SendWebRequest();
+	if (hs_get.error != null)
+		Debug.Log("There was an error getting the high score: "
+                + hs_get.error);
+	else
+	{
+		string dataText = hs_get.downloadHandler.text;
+		MatchCollection mc = Regex.Matches(dataText, @"_");
+		if (mc.Count > 0)
+		{
+			string[] splitData = Regex.Split(dataText, @"_");
+			for (int i =0; i < mc.Count; i++)
+			{
+				if (i % 2 == 0)
+					nameResultText.text += 
+                                        splitData[i];
+				else
+					scoreResultText.text += 
+                                        splitData[i];
+			}
+		}
+	}
+}
+IEnumerator PostScores(string name, int score)
+{
+	string hash = HashInput(name + score + secretKey);
+	string post_url = addScoreURL + "name=" + 
+           UnityWebRequest.EscapeURL(name) + "&score=" 
+           + score + "&hash=" + hash;
+	UnityWebRequest hs_post = UnityWebRequest.Post(post_url, hash);
+	yield return hs_post.SendWebRequest();
+	if (hs_post.error != null)
+		Debug.Log("There was an error posting the high score: " 
+                + hs_post.error);
+}
+
+public string HashInput(string input)
+{
+	SHA256Managed hm = new SHA256Managed();
+	byte[] hashValue = 	
+            hm.ComputeHash(System.Text.Encoding.ASCII.GetBytes(input));
+	string hash_convert = 
+             BitConverter.ToString(hashValue).Replace("-", "").ToLower();
+	return hash_convert;
+}
 
 }
