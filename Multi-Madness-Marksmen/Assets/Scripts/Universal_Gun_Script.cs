@@ -266,7 +266,7 @@ public class Universal_Gun_Script : MonoBehaviour
             GameObject impactGO;
 
             if(layer == 8){
-                impactGO = Instantiate(playerHitEffect, hit.point, Quaternion.LookRotation(hit.normal)); // Efeeeekt particle na místo výstřelu
+                impactGO = Instantiate(playerHitEffect, hit.point, Quaternion.LookRotation(-hit.normal)); // Efeeeekt particle na místo výstřelu
             } else {
                 impactGO = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal)); // Efeeeekt particle na místo výstřelu
             }
