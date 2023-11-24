@@ -226,6 +226,8 @@ public class Universal_Gun_Script : MonoBehaviour
             Healt_Controler target = hit.transform.GetComponent<Healt_Controler>(); // Něco je zde špatně idk co
             // po hitu se nedá player controler, je to shit protože jak je kravina prázdný game object tak to dělá neplechu, zkus dát jako hlavní kravinu model toho hráče tomu dej PlayerControler atd, u toho modelu máš rovnou riugiutbody a capsule colider to by mohlo fachat a taky by to asi vyřešilo problém s sekavýám movementem ale to se uvidí, ok díky jí jdu spat gn xdddddd
 
+            Healt_Controler_Enemy enemyTarget = hit.transform.GetComponent<Healt_Controler_Enemy>();
+
             Rigidbody position = hit.transform.GetComponent<Rigidbody>();
 
             Debug.Log(position);
@@ -234,7 +236,7 @@ public class Universal_Gun_Script : MonoBehaviour
 
             StartCoroutine(SpawnTrail(trail, hit, layer));
 
-            if(target != null){
+            if(target != null || enemyTarget != null){//Enemytarget pak odstran ted to je jen na test
 
                 //hit.rigidbody.AddForce(-hit.normal * impactForce);
 
@@ -244,17 +246,21 @@ public class Universal_Gun_Script : MonoBehaviour
 
                 if (heightDiference > 0.5f) {
                     //Byla zasažena hlava
-                    got_kill = target.TakeDamage(headDemage);
+                    got_kill = enemyTarget.TakeDamage(headDemage); // pak přepiš na target
+                    
                     Debug.Log("Hlava" + headDemage);
                 } else {
                     //Cokoliv jine na těle zasazene xd
-                    got_kill = target.TakeDamage(normalDamage);
+                    got_kill = enemyTarget.TakeDamage(normalDamage);//pak přepiš na target toto je test
                     Debug.Log("Telo" + normalDamage);
                 }
                 if(got_kill && !allreadyKilled){
 
                     killCount++;
                     allreadyKilled = true;
+
+
+
                     Debug.Log(killCount);
                     if(isAiming){
                         wasAiming = true;

@@ -29,12 +29,13 @@ public class PlayerControler : MonoBehaviour
     public TextMeshProUGUI killCountText;
     public TextMeshProUGUI menuMessage;
 
-    public float health = 100f;
+    //public float health = 100f;
 
     public string[] deathNotes = new string[] {"You must be from ITA :(", "He got you good", "Are you stupid or something ?", "SkILL ISUE", "Just HIT them! its not that hard","Are you blind?","L", "Get better :D", "Cmoon kill them", "Trash!", "Unbelivable", "WHY ARE YOU STILL DIINGGGG?!"};
 
 
     public int selectedGun = 0;
+    public int actualGun;
     public int kills = 0;
 
     public bool isDeath = false;
@@ -46,8 +47,13 @@ public class PlayerControler : MonoBehaviour
         weppons = new GameObject[] {wepponAK, wepponSniper, wepponShootgun};
 
         wepponHolders = new GameObject[] {wepponAKHolder, wepponSniperHolder, wepponShootgunHolder};
+
+        actualGun = selectedGun;
+
+        killCountText.text = "0";
     }
 
+    int killsOut;
     // Update is called once per frame
     void Update()
     {
@@ -57,6 +63,23 @@ public class PlayerControler : MonoBehaviour
 
         Menu();
 
+        killsOut = getKillCount(actualGun);
+        
+        if(killsOut != kills){// dal kill dalo by se říct
+
+            kills = killsOut; // přepíše se počet kilů
+
+
+            //Zještě bude nahoře proměná do které se zaoplíéše po připojení max score z databáze, poté se bude s hodnotou kills porvnávat a jakmile bude vyšší než  ta v databázi tak se přepíše
+
+            //NEbo, se až po hráčově smrti připíše do databáíze což bude ase better
+
+
+            killCountText.text = kills.ToString();
+
+        }
+
+/*
         if(wepponAKHolder.activeSelf){
             if(wepponAK.GetComponent<Universal_Gun_Script>().killCount > kills){
                 kills = wepponAK.GetComponent<Universal_Gun_Script>().killCount;
@@ -71,9 +94,9 @@ public class PlayerControler : MonoBehaviour
         }else if(wepponShootgunHolder.activeSelf){
             kills = wepponShootgun.GetComponent<Universal_Gun_Script>().killCount;
             killCountText.text = kills.ToString();
-        }
+        }*/
     }
-    public bool TakeDamage(float amount){
+    /*public bool TakeDamage(float amount){
 
         did_it_die = false;
 
@@ -94,11 +117,16 @@ public class PlayerControler : MonoBehaviour
             //Resetuje se aktuální K/D stat
         }
         return did_it_die;
-    }
+    }*/
     public void die(){ // i want too :)
+
+
+        //Zde se před vynulováním porovná data z databáze a s kills, podle toho jeslti bude kills větší tak se tatro hodnota zapíše do databáze
 
         kills = 0;
         killCountText.text = "0";
+
+        resetKillCount();
 
         removeGuns();
 
@@ -124,6 +152,10 @@ public class PlayerControler : MonoBehaviour
 
         enableControls();
 
+        reloadGuns();
+
+        actualGun = selectedGun;
+
         equipGun(selectedGun);
 
         escMenuVisual.SetActive(false);
@@ -139,20 +171,22 @@ public class PlayerControler : MonoBehaviour
 
                 respawn();
 
-            }else if(isInMenu){
+            }else {
+                if(isInMenu){
 
-                isInMenu = false;
-                equipGun(selectedGun);
-                enableControls();
-                escMenuVisual.SetActive(false);
+                    isInMenu = false;
+                    equipGun(actualGun);
+                    enableControls();
+                    escMenuVisual.SetActive(false);
 
-            } else {
+                } else {
 
-                isInMenu = true;
-                disableControls();
-                disableGuns();
-                escMenuVisual.SetActive(true);
+                    isInMenu = true;
+                    disableControls();
+                    disableGuns();
+                    escMenuVisual.SetActive(true);
 
+                }
             }
         }
     }
@@ -225,6 +259,70 @@ public class PlayerControler : MonoBehaviour
         int noteID = Random.Range(0, deathNotes.Length - 1);
 
         menuMessage.text = deathNotes[noteID];
+
+    }
+
+    public void selectAK(){
+        selectedGun = 0;
+    }
+
+    public void selectSR(){
+        selectedGun = 1;
+    }
+
+    public void selectSG(){
+        selectedGun = 2;
+    }
+
+    private void reloadGuns(){
+
+        foreach(GameObject gun in weppons){//Začne to tím že to zneaktivní všechny zbraně
+
+            gun.GetComponent<Universal_Gun_Script>().currentAmmo = gun.GetComponent<Universal_Gun_Script>().magazineSize;
+
+        }
+
+    }
+
+    private void resetKillCount(){
+
+        foreach(GameObject gun in weppons){//Začne to tím že to zneaktivní všechny zbraně
+
+            gun.GetComponent<Universal_Gun_Script>().killCount = 0;
+
+        }
+    }
+
+    private int getKillCount(int gunSelected){
+
+        int kills = 0;
+
+        switch(gunSelected){
+
+            case 0:{
+                
+                kills = wepponAK.GetComponent<Universal_Gun_Script>().killCount;
+
+                break;
+            }
+
+            case 1:{
+
+                kills = wepponSniper.GetComponent<Universal_Gun_Script>().killCount;
+
+                break;
+            }
+
+            case 2:{
+
+                kills = wepponShootgun.GetComponent<Universal_Gun_Script>().killCount;
+
+                break;
+            }
+
+        }
+
+        return kills;
 
     }
 
