@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -28,15 +29,18 @@ public class PlayerControler : MonoBehaviour
 
     public TextMeshProUGUI killCountText;
     public TextMeshProUGUI menuMessage;
+    public static TextMeshProUGUI maxAmmo;
+    public static TextMeshProUGUI currnetAmmo;
 
     //public float health = 100f;
 
-    public string[] deathNotes = new string[] {"You must be from ITA :(", "He got you good", "Are you stupid or something ?", "SkILL ISUE", "Just HIT them! its not that hard","Are you blind?","L", "Get better :D", "Cmoon kill them", "Trash!", "Unbelivable", "WHY ARE YOU STILL DIINGGGG?!"};
+    public string[] deathNotes = new string[] {"You done well, you can rest now", "He got you good", "Are you stupid or something ?", "SkILL ISUE", "Just HIT them! its not that hard","Are you blind?","L", "Get better :D", "Cmoon kill them", "Trash!", "Unbelivable", "WHY ARE YOU STILL DIINGGGG?!"};
 
 
     public int selectedGun = 0;
     public int actualGun;
     public int kills = 0;
+    private int ammo;
 
     public bool isDeath = false;
     private bool isInMenu = false;
@@ -51,6 +55,8 @@ public class PlayerControler : MonoBehaviour
         actualGun = selectedGun;
 
         killCountText.text = "0";
+
+        displayWepponStats(selectedGun);
     }
 
     int killsOut;
@@ -158,6 +164,8 @@ public class PlayerControler : MonoBehaviour
 
         equipGun(selectedGun);
 
+        displayWepponStats(selectedGun);
+
         escMenuVisual.SetActive(false);
 
         player.isKinematic = false;
@@ -256,7 +264,7 @@ public class PlayerControler : MonoBehaviour
 
     private void writeDeathNote(){
 
-        int noteID = Random.Range(0, deathNotes.Length - 1);
+        int noteID = UnityEngine.Random.Range(0, deathNotes.Length - 1);
 
         menuMessage.text = deathNotes[noteID];
 
@@ -324,6 +332,53 @@ public class PlayerControler : MonoBehaviour
 
         return kills;
 
+    }
+
+    private int getMaxAmmo(int gunSelected){
+
+        int Ammo = 30;
+
+        switch(gunSelected){
+
+            case 0:{
+                
+                Ammo = Convert.ToInt32(wepponAK.GetComponent<Universal_Gun_Script>().magazineSize);
+
+                break;
+            }
+
+            case 1:{
+
+                Ammo = Convert.ToInt32(wepponSniper.GetComponent<Universal_Gun_Script>().magazineSize);
+
+                break;
+            }
+
+            case 2:{
+
+                Ammo = Convert.ToInt32(wepponShootgun.GetComponent<Universal_Gun_Script>().magazineSize);
+
+                break;
+            }
+        }
+
+        return Ammo;
+
+    }
+    private void displayWepponStats(int gunSelected){
+
+        maxAmmo.text = getMaxAmmo(gunSelected).ToString();
+        currnetAmmo.text = getMaxAmmo(gunSelected).ToString();
+
+    }
+
+    private int getSelectedGun(){
+
+        return selectedGun;
+    }
+    public static void shoot(int ammo_){
+
+        currnetAmmo.text = ammo_.ToString();
     }
 
 }

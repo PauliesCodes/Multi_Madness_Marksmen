@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Versioning;
@@ -81,7 +82,8 @@ public class Universal_Gun_Script : MonoBehaviour
             gunCam.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, aimFOV, Time.deltaTime * aimSpeed);
             if(sniperScope && Vector3.Distance(transform.localPosition, aimPos) < positionThreshold){
                 scope.SetActive(true);
-                sniperRifel.SetActive(false);
+                gunCam.nearClipPlane = 20f;
+                //sniperRifel.SetActive(false);
                 zoom.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, aimFOV, Time.deltaTime * aimSpeed);
             }
         } else {
@@ -93,7 +95,8 @@ public class Universal_Gun_Script : MonoBehaviour
             gunCam.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, standartFOV, Time.deltaTime * aimSpeed);
             if(sniperScope && Vector3.Distance(transform.localPosition, aimPos) > positionThreshold){
                 scope.SetActive(false);
-                sniperRifel.SetActive(true);
+                gunCam.nearClipPlane = 0.01f;
+                //sniperRifel.SetActive(true);
                 zoom.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, standartFOV, Time.deltaTime * aimSpeed);
             }
         }
@@ -104,6 +107,7 @@ public class Universal_Gun_Script : MonoBehaviour
         currentAmmo = magazineSize;
 
         recoil = GetComponent<Recoil_Script>();
+
     }
 
     void Update()
@@ -215,9 +219,11 @@ public class Universal_Gun_Script : MonoBehaviour
 
         MuzzleFlash.Play();
 
+        PlayerControler.shoot(Convert.ToInt32(currentAmmo));
+
         int layer = 90; // Nějhkaé random číslo vrstvy jelikož jich mít tolik rozjofně nebudu tak to uděšlám takoto asi to jde i jinak ale ted idk casenm se muze opravit
 
-        Vector3 dispersion_vector = new Vector3(Random.Range(-dispersion, dispersion), Random.Range(-dispersion, dispersion), Random.Range(-dispersion, dispersion));
+        Vector3 dispersion_vector = new Vector3(UnityEngine.Random.Range(-dispersion, dispersion), UnityEngine.Random.Range(-dispersion, dispersion), UnityEngine.Random.Range(-dispersion, dispersion));
 
         if (Physics.Raycast(shootingDirection.transform.position, shootingDirection.transform.forward + dispersion_vector, out hit, range)){ // Or dispersion vectopr
 
