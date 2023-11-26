@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Versioning;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -56,6 +57,10 @@ public class Universal_Gun_Script : MonoBehaviour
     public GameObject scope;
     public GameObject sniperRifel;
     public Camera zoom;
+    public Transform damageSpawnPoint;
+    public GameObject damageText;
+    public GameObject damageTextHead;
+    public Canvas targetCanvas;
     public float positionThreshold;
     private float nextTimeToFire = 0f;
 
@@ -219,8 +224,6 @@ public class Universal_Gun_Script : MonoBehaviour
 
         MuzzleFlash.Play();
 
-        PlayerControler.shoot(Convert.ToInt32(currentAmmo));
-
         int layer = 90; // Nějhkaé random číslo vrstvy jelikož jich mít tolik rozjofně nebudu tak to uděšlám takoto asi to jde i jinak ale ted idk casenm se muze opravit
 
         Vector3 dispersion_vector = new Vector3(UnityEngine.Random.Range(-dispersion, dispersion), UnityEngine.Random.Range(-dispersion, dispersion), UnityEngine.Random.Range(-dispersion, dispersion));
@@ -246,18 +249,18 @@ public class Universal_Gun_Script : MonoBehaviour
 
                 //hit.rigidbody.AddForce(-hit.normal * impactForce);
 
-
-
                 float heightDiference = hit.point.y - position.transform.position.y; //zjištění jestli dostal čočku xd
 
                 if (heightDiference > 0.5f) {
                     //Byla zasažena hlava
                     got_kill = enemyTarget.TakeDamage(headDemage); // pak přepiš na target
-                    
+                    SpawnTextBox(Convert.ToInt32(headDemage), true);
+
                     Debug.Log("Hlava" + headDemage);
                 } else {
                     //Cokoliv jine na těle zasazene xd
                     got_kill = enemyTarget.TakeDamage(normalDamage);//pak přepiš na target toto je test
+                    SpawnTextBox(Convert.ToInt32(normalDamage), false);
                     Debug.Log("Telo" + normalDamage);
                 }
                 if(got_kill && !allreadyKilled){
@@ -303,6 +306,49 @@ public class Universal_Gun_Script : MonoBehaviour
 
         Trail.transform.position = Hit.point;
         Destroy(Trail.gameObject, Trail.time);
+    }
+    void SpawnTextBox(int hitAmount, bool head)
+    {
+        GameObject textBoxInstance;
+        // Vytvořte instanci textového boxu na zadaném místě
+        if(head){
+
+            textBoxInstance = Instantiate(damageTextHead, targetCanvas.transform);
+
+        }
+        else {
+
+            textBoxInstance = Instantiate(damageText, targetCanvas.transform);
+
+        }
+        
+
+        // Připojte textový obsah k textbox
+
+        textBoxInstance.GetComponent<TextMeshProUGUI>().text = hitAmount.ToString();
+        
+        textBoxInstance.transform.position = damageSpawnPoint.position;
+
+        // Spusťte proces pohybu a odstranění po určité době
+        StartCoroutine(MoveAndDestroy(textBoxInstance));
+    }
+
+    IEnumerator MoveAndDestroy(GameObject textBox)
+    {
+        float duration = .5f; // Doba pohybu a trvání
+        float startTime = Time.time;
+
+        while (Time.time - startTime < duration)
+        {
+            // Pohybujte textboxem doprava nahoru
+            textBox.transform.Translate(Vector3.right * Time.deltaTime * 50);
+            textBox.transform.Translate(Vector3.up * Time.deltaTime * 50);
+
+            yield return null; // Počkejte na další frame
+        }
+
+        // Zničte textbox po dokončení pohybu
+        Destroy(textBox);
     }
 }
 

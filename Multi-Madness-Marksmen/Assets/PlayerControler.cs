@@ -21,16 +21,23 @@ public class PlayerControler : MonoBehaviour
     public GameObject playerObject;
     private GameObject[] weppons;
     private GameObject[] wepponHolders;
+    public GameObject[] playerParts;
     public Rigidbody player;
 
+    public Healt_Controler healt_Controler;
 
     public KeyCode escape = KeyCode.Escape;
 
+    public Transform spawnPoint;
+
+    public Material akMaterial;
+    public Material srMaterial;
+    public Material sgMaterial;
 
     public TextMeshProUGUI killCountText;
     public TextMeshProUGUI menuMessage;
-    public static TextMeshProUGUI maxAmmo;
-    public static TextMeshProUGUI currnetAmmo;
+    public TextMeshProUGUI maxAmmo;
+    public TextMeshProUGUI currnetAmmo;
 
     //public float health = 100f;
 
@@ -40,6 +47,9 @@ public class PlayerControler : MonoBehaviour
     public int selectedGun = 0;
     public int actualGun;
     public int kills = 0;
+    private int maxAmmo0;
+    private int maxAmmo1;
+    private int maxAmmo2;
     private int ammo;
 
     public bool isDeath = false;
@@ -57,6 +67,13 @@ public class PlayerControler : MonoBehaviour
         killCountText.text = "0";
 
         displayWepponStats(selectedGun);
+
+        healt_Controler.healUp();
+
+        maxAmmo0 = Convert.ToInt32(wepponAK.GetComponent<Universal_Gun_Script>().magazineSize);
+        maxAmmo1 = Convert.ToInt32(wepponSniper.GetComponent<Universal_Gun_Script>().magazineSize);
+        maxAmmo2 = Convert.ToInt32(wepponShootgun.GetComponent<Universal_Gun_Script>().magazineSize);
+
     }
 
     int killsOut;
@@ -75,6 +92,7 @@ public class PlayerControler : MonoBehaviour
 
             kills = killsOut; // přepíše se počet kilů
 
+            healt_Controler.makeItHarder();
 
             //Zještě bude nahoře proměná do které se zaoplíéše po připojení max score z databáze, poté se bude s hodnotou kills porvnávat a jakmile bude vyšší než  ta v databázi tak se přepíše
 
@@ -85,6 +103,7 @@ public class PlayerControler : MonoBehaviour
 
         }
 
+        displayCurrentAmmo(actualGun);
 /*
         if(wepponAKHolder.activeSelf){
             if(wepponAK.GetComponent<Universal_Gun_Script>().killCount > kills){
@@ -152,6 +171,10 @@ public class PlayerControler : MonoBehaviour
 
     public void respawn(){ // You live only once, dont use it
 
+        playerMovement.transform.position = spawnPoint.position;
+
+        playerMovement.transform.rotation = spawnPoint.rotation;
+
         isDeath = false;
 
         playerObject.SetActive(true);
@@ -165,6 +188,12 @@ public class PlayerControler : MonoBehaviour
         equipGun(selectedGun);
 
         displayWepponStats(selectedGun);
+
+        changeCatLook(selectedGun);
+
+        healt_Controler.restHealth();
+
+        healt_Controler.healUp();
 
         escMenuVisual.SetActive(false);
 
@@ -192,6 +221,7 @@ public class PlayerControler : MonoBehaviour
                     isInMenu = true;
                     disableControls();
                     disableGuns();
+                    menuMessage.text = "Paused, just for you <3 Meow";
                     escMenuVisual.SetActive(true);
 
                 }
@@ -372,13 +402,80 @@ public class PlayerControler : MonoBehaviour
 
     }
 
-    private int getSelectedGun(){
 
-        return selectedGun;
+    private void displayCurrentAmmo(int gunSelected){
+
+        int Ammo = 0;
+
+        switch(gunSelected){
+
+            case 0:{
+                
+                Ammo = Convert.ToInt32(wepponAK.GetComponent<Universal_Gun_Script>().currentAmmo);
+
+                break;
+            }
+
+            case 1:{
+
+                Ammo = Convert.ToInt32(wepponSniper.GetComponent<Universal_Gun_Script>().currentAmmo);
+
+                break;
+            }
+
+            case 2:{
+
+                Ammo = Convert.ToInt32(wepponShootgun.GetComponent<Universal_Gun_Script>().currentAmmo);
+
+                break;
+            }
+        }       
+
+        if(ammo != Ammo){
+
+            ammo = Ammo;
+
+            currnetAmmo.text = ammo.ToString();
+
+        }
+
+
     }
-    public static void shoot(int ammo_){
 
-        currnetAmmo.text = ammo_.ToString();
+    private void changeCatLook(int gunSelected){
+
+        Material playerMaterial = akMaterial;
+
+        switch(gunSelected){
+
+            case 1:{
+
+                playerMaterial = srMaterial;
+
+                break;
+            }
+
+            case 2:{
+
+                playerMaterial = sgMaterial;
+
+                break;
+            }
+
+        }       
+        
+        foreach (GameObject objekt in playerParts)
+        {
+            // Získání komponenty Renderer
+            Renderer rend = objekt.GetComponent<Renderer>();
+
+            // Nastavení nového materiálu
+            if (rend != null)
+            {
+                rend.material = playerMaterial;
+            }
+        }
+
     }
 
 }
