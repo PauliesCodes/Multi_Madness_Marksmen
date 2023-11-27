@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -56245,8 +56245,8 @@ MonoBehaviour:
   headDemageLow: 15
   headDemageHigh: 30
   range: 50
-  normalDispersion: 0.5
-  aimDispersion: 0.3
+  normalDispersion: 0.15
+  aimDispersion: 0.08
   impactForce: 30
   fireRate: 1
   reloadTime: 2
@@ -56310,8 +56310,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.39810136
-      value: 9.420199
+      time: 0.3636928
+      value: -49.615604
       inSlope: 0.008927827
       outSlope: 0.008927827
       tangentMode: 0
@@ -56472,8 +56472,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.19428784
-      value: 0.44877207
+      time: 0.092999876
+      value: -25.673038
       inSlope: -0.20830432
       outSlope: -0.20830432
       tangentMode: 0
@@ -57600,8 +57600,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.39810136
-      value: 9.420199
+      time: 0.5369868
+      value: 34.866673
       inSlope: 0.008927827
       outSlope: 0.008927827
       tangentMode: 0
@@ -57762,8 +57762,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.19428784
-      value: 0.44877207
+      time: 0.42309338
+      value: 4.9848742
       inSlope: -0.20830432
       outSlope: -0.20830432
       tangentMode: 0
@@ -58087,7 +58087,7 @@ MonoBehaviour:
   headDemageHigh: 120
   range: 1000
   normalDispersion: 0.3
-  aimDispersion: 0.05
+  aimDispersion: 0
   impactForce: 30
   fireRate: 1
   reloadTime: 2
@@ -58152,7 +58152,7 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 0.39810136
-      value: 9.420199
+      value: -50.02962
       inSlope: 0.008927827
       outSlope: 0.008927827
       tangentMode: 0
