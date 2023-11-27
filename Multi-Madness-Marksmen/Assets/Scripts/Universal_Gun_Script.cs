@@ -10,8 +10,10 @@ using UnityEngine.UI;
 public class Universal_Gun_Script : MonoBehaviour
 {
 [Header("Settings")]
-    public float normalDamage = 10f;
-    public float headDemage = 30f;
+    public float normalDamageLow = 8f;
+    public float normalDamageHigh = 16f;
+    public float headDemageLow = 20f;
+    public float headDemageHigh = 40f;
     public float range = 100f;
     public float normalDispersion = 0.5f;
     public float aimDispersion = 0.1f;
@@ -47,6 +49,7 @@ public class Universal_Gun_Script : MonoBehaviour
 
     [Header("Animations")]
     //public Animation reloadAnim;
+    public Animator reloadAnim;
 
     [Header("Aim Settings")]
     private Vector3 originalPos;
@@ -77,6 +80,14 @@ public class Universal_Gun_Script : MonoBehaviour
     static bool semiFire = true;
 
     private bool allreadyKilled = false;
+
+
+    public float rotationSpeed = 180f; // Adjust this value to control the rotation speed
+
+    private float targetRotation;   
+
+    public GameObject wepponHolder;
+
     private void Aim(){
 
         if(Input.GetKey(aimKey) && !reloading){ // Hrac ztaměřil, zbran se mu dá k hlave a bude střílet pořesněji
@@ -113,6 +124,8 @@ public class Universal_Gun_Script : MonoBehaviour
 
         recoil = GetComponent<Recoil_Script>();
 
+        targetRotation = transform.eulerAngles.y + 360f;
+
     }
 
     void Update()
@@ -124,7 +137,7 @@ public class Universal_Gun_Script : MonoBehaviour
 
             Debug.Log("Reloading....");
 
-            //reloadAnim.Play();
+            reloadAnim.SetTrigger("ReloadTrigger");
 
             reloading = true;
 
@@ -253,15 +266,21 @@ public class Universal_Gun_Script : MonoBehaviour
 
                 if (heightDiference > 0.5f) {
                     //Byla zasažena hlava
-                    got_kill = enemyTarget.TakeDamage(headDemage); // pak přepiš na target
-                    SpawnTextBox(Convert.ToInt32(headDemage), true);
 
-                    Debug.Log("Hlava" + headDemage);
+                    float damage = UnityEngine.Random.Range(headDemageLow, headDemageHigh);
+
+                    got_kill = enemyTarget.TakeDamage(damage); // pak přepiš na target
+                    SpawnTextBox(Convert.ToInt32(damage), true);
+
+                    Debug.Log("Hlava" + headDemageLow);
                 } else {
                     //Cokoliv jine na těle zasazene xd
-                    got_kill = enemyTarget.TakeDamage(normalDamage);//pak přepiš na target toto je test
-                    SpawnTextBox(Convert.ToInt32(normalDamage), false);
-                    Debug.Log("Telo" + normalDamage);
+
+                    float damage = UnityEngine.Random.Range(normalDamageLow, normalDamageHigh);
+
+                    got_kill = enemyTarget.TakeDamage(damage);//pak přepiš na target toto je test
+                    SpawnTextBox(Convert.ToInt32(damage), false);
+                    Debug.Log("Telo" + damage);
                 }
                 if(got_kill && !allreadyKilled){
 
@@ -350,6 +369,8 @@ public class Universal_Gun_Script : MonoBehaviour
         // Zničte textbox po dokončení pohybu
         Destroy(textBox);
     }
+
+
 }
 
 /* // Pokus o recoil asi změním ted není čas, wepon swing better to do xd

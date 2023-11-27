@@ -39,6 +39,10 @@ public class PlayerControler : MonoBehaviour
     public TextMeshProUGUI maxAmmo;
     public TextMeshProUGUI currnetAmmo;
 
+    public ParticleSystem explosionEffect;
+
+    public AudioSource dieSound;
+
     //public float health = 100f;
 
     public string[] deathNotes = new string[] {"You done well, you can rest now", "He got you good", "Are you stupid or something ?", "SkILL ISUE", "Just HIT them! its not that hard","Are you blind?","L", "Get better :D", "Cmoon kill them", "Trash!", "Unbelivable", "WHY ARE YOU STILL DIINGGGG?!"};
@@ -145,6 +149,8 @@ public class PlayerControler : MonoBehaviour
     }*/
     public void die(){ // i want too :)
 
+        explosionEffect.Play();
+        dieSound.Play();
 
         //Zde se před vynulováním porovná data z databáze a s kills, podle toho jeslti bude kills větší tak se tatro hodnota zapíše do databáze
 
@@ -479,5 +485,3 @@ public class PlayerControler : MonoBehaviour
     }
 
 }
-
-
