@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerControler : MonoBehaviour
 {
@@ -18,10 +17,13 @@ public class PlayerControler : MonoBehaviour
     public GameObject playerCam;
     public GameObject playerMovement;
     public GameObject escMenuVisual;
+    public GameObject settingsMenuVisual;
+    public GameObject playerUI;
     public GameObject playerObject;
     private GameObject[] weppons;
     private GameObject[] wepponHolders;
     public GameObject[] playerParts;
+    public GameObject enemy;
     public Rigidbody player;
 
     public Healt_Controler healt_Controler;
@@ -59,6 +61,7 @@ public class PlayerControler : MonoBehaviour
     public bool isDeath = false;
     private bool isInMenu = false;
     bool did_it_die;
+    public bool singlePlayer = true;
 
     void Start()
     {
@@ -78,6 +81,8 @@ public class PlayerControler : MonoBehaviour
         maxAmmo1 = Convert.ToInt32(wepponSniper.GetComponent<Universal_Gun_Script>().magazineSize);
         maxAmmo2 = Convert.ToInt32(wepponShootgun.GetComponent<Universal_Gun_Script>().magazineSize);
 
+        startSettings();
+
     }
 
     int killsOut;
@@ -89,6 +94,16 @@ public class PlayerControler : MonoBehaviour
         }
 
         Menu();
+
+        if(singlePlayer){
+
+            if(Input.GetKeyDown(KeyCode.E)){
+
+                Instantiate(enemy, transform.position, transform.rotation);
+
+            }
+
+        }
 
         killsOut = getKillCount(actualGun);
         
@@ -172,6 +187,7 @@ public class PlayerControler : MonoBehaviour
         escMenuVisual.SetActive(true);
         playerObject.SetActive(false);
 
+        playerUI.SetActive(false);
 
     } 
 
@@ -202,8 +218,11 @@ public class PlayerControler : MonoBehaviour
         healt_Controler.healUp();
 
         escMenuVisual.SetActive(false);
+        settingsMenuVisual.SetActive(false);
 
         player.isKinematic = false;
+
+        playerUI.SetActive(true);
 
     }
     private void Menu(){
@@ -221,6 +240,9 @@ public class PlayerControler : MonoBehaviour
                     equipGun(actualGun);
                     enableControls();
                     escMenuVisual.SetActive(false);
+                    settingsMenuVisual.SetActive(false);
+                    playerUI.SetActive(true);
+
 
                 } else {
 
@@ -229,6 +251,7 @@ public class PlayerControler : MonoBehaviour
                     disableGuns();
                     menuMessage.text = "Paused, just for you <3 Meow";
                     escMenuVisual.SetActive(true);
+                    playerUI.SetActive(false);
 
                 }
             }
@@ -481,6 +504,50 @@ public class PlayerControler : MonoBehaviour
                 rend.material = playerMaterial;
             }
         }
+
+    }
+
+    public void backToGame(){
+
+        isInMenu = false;
+        equipGun(actualGun);
+        enableControls();
+        escMenuVisual.SetActive(false);
+        playerUI.SetActive(true);
+
+        if(isDeath){
+            respawn();
+        }
+
+    }
+
+    public void startSettings(){
+
+        kills = 0;
+        killCountText.text = "0";
+
+        resetKillCount();
+
+        removeGuns();
+
+        disableControls();
+
+        menuMessage.text = "Lets kill them !";
+
+        isDeath = true;
+
+        player.isKinematic = true;
+
+        escMenuVisual.SetActive(true);
+        playerObject.SetActive(false);
+
+        playerUI.SetActive(false);
+
+    }
+
+    public void leaveToMenu(){
+        
+        SceneManager.LoadScene(0);
 
     }
 

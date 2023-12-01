@@ -7,6 +7,8 @@ public class Healt_Controler_Enemy : MonoBehaviour
     public float health = 100f;
 
     public GameObject playerBody;
+    public AudioSource dieSound;
+    public ParticleSystem explosionEffect;
     public bool TakeDamage(float amount){
 
         bool did_it_die = false;
@@ -20,6 +22,9 @@ public class Healt_Controler_Enemy : MonoBehaviour
             did_it_die = true; 
 
             playerBody.SetActive(false);
+
+            explosionEffect.Play();
+            dieSound.Play();
 
             Debug.Log("Ive been kiled");
 

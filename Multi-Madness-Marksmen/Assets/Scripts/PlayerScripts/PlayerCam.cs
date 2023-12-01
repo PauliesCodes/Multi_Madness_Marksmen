@@ -14,8 +14,8 @@ public class PlayerCam : MonoBehaviour
 
     public GameObject cameraRotation;
 
-    float xRotation;
-    float yRotation;
+    public float xRotation;
+    public float yRotation;
     void Start()
     {
 

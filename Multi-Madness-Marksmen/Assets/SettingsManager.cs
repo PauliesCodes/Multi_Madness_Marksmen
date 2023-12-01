@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -11,10 +12,24 @@ public class SettingsManager : MonoBehaviour
     
     public Dropdown resolutionDropdown;
 
+    public TMP_InputField xSens;
+
+    public TMP_InputField ySens;
+
+    public GameObject mouseScriptReference;
+
     Resolution[] resolutions;
 
     void Start()
     {
+        if(xSens && ySens != null){
+        xSens.text = mouseScriptReference.GetComponent<PlayerCam>().sensX.ToString();
+        
+        ySens.text = mouseScriptReference.GetComponent<PlayerCam>().sensY.ToString();
+        }
+
+
+
         resolutions = Screen.resolutions;   
 
         resolutionDropdown.ClearOptions();
@@ -73,6 +88,34 @@ public class SettingsManager : MonoBehaviour
         Resolution resolution = resolutions[resolutionIndex];
 
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+
+    }
+
+    public void setXSens(){
+
+        if(xSens.text != ""){
+
+            if(int.TryParse(xSens.text, out int x)){
+                
+                mouseScriptReference.GetComponent<PlayerCam>().sensX = x;
+
+            }
+
+        }
+
+    }
+
+    public void setYSens(){
+        
+        if(ySens.text != ""){
+
+            if(int.TryParse(ySens.text, out int y)){
+                
+                mouseScriptReference.GetComponent<PlayerCam>().sensY = y;
+
+            }
+
+        }
 
     }
 

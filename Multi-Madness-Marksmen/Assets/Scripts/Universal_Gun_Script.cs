@@ -44,6 +44,7 @@ public class Universal_Gun_Script : MonoBehaviour
     public ParticleSystem MuzzleFlash;
     public GameObject shootingDirection;
     public AudioSource soundEffect;
+    public AudioSource hitSound;
     public Camera gunCam;
     Recoil_Script recoil;
 
@@ -76,7 +77,6 @@ public class Universal_Gun_Script : MonoBehaviour
     private float dispersion;
 
     public int killCount = 0;
-    public bool wasAiming = false;
     static bool semiFire = true;
 
     private bool allreadyKilled = false;
@@ -87,6 +87,8 @@ public class Universal_Gun_Script : MonoBehaviour
     private float targetRotation;   
 
     public GameObject wepponHolder;
+
+    public TextMeshProUGUI noScopeText;
 
     private void Aim(){
 
@@ -107,7 +109,6 @@ public class Universal_Gun_Script : MonoBehaviour
             dispersion = normalDispersion;
             transform.localPosition = Vector3.Lerp(transform.localPosition, originalPos, Time.deltaTime * aimSpeed);
             isAiming = false;
-            wasAiming = false;
             gunCam.fieldOfView = Mathf.Lerp(gunCam.fieldOfView, standartFOV, Time.deltaTime * aimSpeed);
             if(sniperScope && Vector3.Distance(transform.localPosition, aimPos) > positionThreshold){
                 scope.SetActive(false);
@@ -262,6 +263,8 @@ public class Universal_Gun_Script : MonoBehaviour
 
                 //hit.rigidbody.AddForce(-hit.normal * impactForce);
 
+                hitSound.Play();
+
                 float heightDiference = hit.point.y - position.transform.position.y; //zjištění jestli dostal čočku xd
 
                 if (heightDiference > 0.5f) {
@@ -290,8 +293,13 @@ public class Universal_Gun_Script : MonoBehaviour
 
 
                     Debug.Log(killCount);
-                    if(isAiming){
-                        wasAiming = true;
+                    if(!isAiming && sniperScope){
+                        Debug.Log("NO Scope");
+
+                        SetText("!NOSCOPE!");
+
+                        StartCoroutine(DisappearAfterDelay(1f));
+
                     }
                 }
             } else {
@@ -357,11 +365,15 @@ public class Universal_Gun_Script : MonoBehaviour
         float duration = .5f; // Doba pohybu a trvání
         float startTime = Time.time;
 
+        int textSpeed;
+
         while (Time.time - startTime < duration)
         {
+            textSpeed = UnityEngine.Random.Range(70, 100);
+
             // Pohybujte textboxem doprava nahoru
-            textBox.transform.Translate(Vector3.right * Time.deltaTime * 50);
-            textBox.transform.Translate(Vector3.up * Time.deltaTime * 50);
+            textBox.transform.Translate(Vector3.right * Time.deltaTime * textSpeed);
+            textBox.transform.Translate(Vector3.up * Time.deltaTime * textSpeed);
 
             yield return null; // Počkejte na další frame
         }
@@ -369,8 +381,18 @@ public class Universal_Gun_Script : MonoBehaviour
         // Zničte textbox po dokončení pohybu
         Destroy(textBox);
     }
+    void SetText(string text)
+    {
+        noScopeText.text = text;
+    }
+    IEnumerator DisappearAfterDelay(float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
 
-
+        // Set text to empty string to make it disappear
+        SetText("");
+    }
 }
 
 /* // Pokus o recoil asi změním ted není čas, wepon swing better to do xd
