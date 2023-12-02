@@ -30,7 +30,8 @@ public class PlayerControler : MonoBehaviour
 
     public KeyCode escape = KeyCode.Escape;
 
-    public Transform spawnPoint;
+    public Transform spawnPointA;
+    public Transform spawnPointB;
 
     public Material akMaterial;
     public Material srMaterial;
@@ -193,9 +194,13 @@ public class PlayerControler : MonoBehaviour
 
     public void respawn(){ // You live only once, dont use it
 
-        playerMovement.transform.position = spawnPoint.position;
+        float a = UnityEngine.Random.Range(spawnPointA.position.x, spawnPointB.position.x);
 
-        playerMovement.transform.rotation = spawnPoint.rotation;
+        float b = UnityEngine.Random.Range(spawnPointA.position.z, spawnPointB.position.z);
+
+        playerMovement.transform.position = new Vector3(a,spawnPointA.position.y, b);
+
+        playerMovement.transform.rotation = spawnPointA.rotation;
 
         isDeath = false;
 
@@ -510,9 +515,10 @@ public class PlayerControler : MonoBehaviour
     public void backToGame(){
 
         isInMenu = false;
-        equipGun(actualGun);
+        equipGun(selectedGun);
         enableControls();
         escMenuVisual.SetActive(false);
+        settingsMenuVisual.SetActive(false);
         playerUI.SetActive(true);
 
         if(isDeath){

@@ -40,7 +40,6 @@ public class Universal_Gun_Script : MonoBehaviour
 
     public TrailRenderer bulletTrail;
     public GameObject impactEffect;
-    public GameObject playerHitEffect;
     public ParticleSystem MuzzleFlash;
     public GameObject shootingDirection;
     public AudioSource soundEffect;
@@ -307,12 +306,10 @@ public class Universal_Gun_Script : MonoBehaviour
             }
             GameObject impactGO;
 
-            if(layer == 8){
-                impactGO = Instantiate(playerHitEffect, hit.point, Quaternion.LookRotation(-hit.normal)); // Efeeeekt particle na místo výstřelu
-            } else {
+            if(layer != 8){
                 impactGO = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal)); // Efeeeekt particle na místo výstřelu
-            }
-            Destroy(impactGO, 1f);
+                Destroy(impactGO, 1f);
+           }
             
         }
     }
