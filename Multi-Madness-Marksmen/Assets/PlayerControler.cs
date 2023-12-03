@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class PlayerControler : MonoBehaviour
 {
@@ -64,8 +65,22 @@ public class PlayerControler : MonoBehaviour
     bool did_it_die;
     public bool singlePlayer = true;
 
+    public float timeOfGame;
+
+    public TextMeshProUGUI timerText;
+    private bool isCounting = false;
+
+    public int maxPlayerScore;
+
     void Start()
     {
+        //sem se z databáze uloží max score podle jména
+        // do proměné maxScore
+
+        maxPlayerScore = 0;// sem se to hodí
+
+
+
         // Získání komponenty Transform aktuálního objektu
         Transform myTransform = transform;
 
@@ -115,7 +130,7 @@ int CountAllChildren(Transform parent)
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.K)){
-            die();
+            dieByTimer();
         }
 
         Menu();
@@ -124,7 +139,12 @@ int CountAllChildren(Transform parent)
 
             if(Input.GetKeyDown(KeyCode.E)){
 
-                Instantiate(enemy, transform.position, transform.rotation);
+
+                float a = UnityEngine.Random.Range(spawnPointA.position.x, spawnPointB.position.x);
+
+                float b = UnityEngine.Random.Range(spawnPointA.position.z, spawnPointB.position.z);
+
+                Instantiate(enemy, new Vector3(a,10,b), transform.rotation);
 
             }
 
@@ -135,6 +155,11 @@ int CountAllChildren(Transform parent)
         if(killsOut != kills){// dal kill dalo by se říct
 
             kills = killsOut; // přepíše se počet kilů
+
+            if(kills == 1){
+                StartCountdown();
+                Debug.Log("Timer on");
+            }
 
             healt_Controler.makeItHarder();
 
@@ -575,10 +600,103 @@ int CountAllChildren(Transform parent)
 
     }
 
+
+    void StartCountdown()
+    {            
+        isCounting = true;
+        StartCoroutine(Countdown());
+    }
+
+    IEnumerator Countdown()
+    {
+        while (isCounting && timeOfGame > 0f)
+        {
+            // Odečte jednu sekundu
+            timeOfGame -= 1f;
+
+            // Aktualizuje text na UI
+            UpdateTimerUI();
+
+            // Počká jednu sekundu
+            yield return new WaitForSeconds(1f);
+        }
+
+        // Zde provede akce po skončení časovače
+        OnTimerEnd();
+    }
+    public void StopCountdown()
+    {
+        isCounting = false;
+        StopAllCoroutines();
+    }
+    public void ResetCountdown()
+    {
+        timeOfGame = 30f; // Nastavte čas na původní hodnotu
+        UpdateTimerUI();
+        StopCountdown(); // Zastavte případný běžící časovač
+    }
+    void UpdateTimerUI()
+    {
+        // Aktualizuje text na UI podle zbývajícího času
+        timerText.text = Mathf.Ceil(timeOfGame).ToString();
+    }
+
+    void OnTimerEnd()
+    {
+        // Zde provede akce po skončení časovače
+        Debug.Log("Časovač skončil!");
+        dieByTimer();
+        timeOfGame = 30;
+        timerText.text = Mathf.Ceil(timeOfGame).ToString();
+    }
+
+
     public void leaveToMenu(){
         
         SceneManager.LoadScene(0);
 
     }
+    public void dieByTimer(){ // i want too :)
 
+        if(kills > maxPlayerScore){
+
+            //Zde se otevře databáze a přepíše se to pokud to bylo větší 
+
+
+        }
+
+
+        ResetCountdown();
+
+        explosionEffect.Play();
+        dieSound.Play();
+
+        //Zde se před vynulováním porovná data z databáze a s kills, podle toho jeslti bude kills větší tak se tatro hodnota zapíše do databáze
+        writePlayerScore();
+
+        kills = 0;
+        killCountText.text = "0";
+
+        resetKillCount();
+
+        removeGuns();
+
+        disableControls();
+
+        isDeath = true;
+
+        player.isKinematic = true;
+
+        escMenuVisual.SetActive(true);
+        playerObject.SetActive(false);
+
+        playerUI.SetActive(false);
+
+    } 
+
+    private void writePlayerScore(){
+
+        menuMessage.text = "Your score : "+kills;
+
+    }
 }

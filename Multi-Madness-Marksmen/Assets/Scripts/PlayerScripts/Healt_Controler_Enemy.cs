@@ -7,6 +7,7 @@ public class Healt_Controler_Enemy : MonoBehaviour
     public float health = 100f;
 
     public GameObject playerBody;
+    public GameObject player;
     public AudioSource dieSound;
     public ParticleSystem explosionEffect;
     public bool TakeDamage(float amount){
@@ -28,9 +29,17 @@ public class Healt_Controler_Enemy : MonoBehaviour
 
             Debug.Log("Ive been kiled");
 
+            Invoke("destrit", 2f);
+
         }
         return did_it_die;
     }
 
+
+    void destrit(){
+
+        Destroy(player);
+
+    }
 
 }

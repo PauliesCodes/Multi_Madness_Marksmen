@@ -88,6 +88,9 @@ public class Universal_Gun_Script : MonoBehaviour
     public GameObject wepponHolder;
 
     public TextMeshProUGUI noScopeText;
+    public Transform spawnPointA;
+    public Transform spawnPointB;
+    public GameObject enemy;
 
     private void Aim(){
 
@@ -120,6 +123,12 @@ public class Universal_Gun_Script : MonoBehaviour
     }
     void Start()
     {
+        gunCam.nearClipPlane = 0.01f;
+
+        gunCam.fieldOfView = standartFOV;
+
+        zoom.fieldOfView = standartFOV;
+
         currentAmmo = magazineSize;
 
         recoil = GetComponent<Recoil_Script>();
@@ -289,7 +298,11 @@ public class Universal_Gun_Script : MonoBehaviour
                     killCount++;
                     allreadyKilled = true;
 
+                    float a = UnityEngine.Random.Range(spawnPointA.position.x, spawnPointB.position.x);
 
+                    float b = UnityEngine.Random.Range(spawnPointA.position.z, spawnPointB.position.z);
+
+                    Instantiate(enemy, new Vector3(a,10,b), transform.rotation);
 
                     Debug.Log(killCount);
                     if(!isAiming && sniperScope){
