@@ -66,6 +66,15 @@ public class PlayerControler : MonoBehaviour
 
     void Start()
     {
+        // Získání komponenty Transform aktuálního objektu
+        Transform myTransform = transform;
+
+        // Zjištění počtu všech potomků pomocí rekurzivní funkce
+        int totalChildCount = CountAllChildren(myTransform);
+
+        // Vypsání počtu všech potomků do konzole
+        Debug.Log("Celkový počet potomků: " + totalChildCount);
+
         weppons = new GameObject[] {wepponAK, wepponSniper, wepponShootgun};
 
         wepponHolders = new GameObject[] {wepponAKHolder, wepponSniperHolder, wepponShootgunHolder};
@@ -85,7 +94,22 @@ public class PlayerControler : MonoBehaviour
         startSettings();
 
     }
+int CountAllChildren(Transform parent)
+    {
+        int count = 0;
 
+        // Projít všechny přímé potomky
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            // Zvýšit počet o jedna pro aktuální potomka
+            count++;
+
+            // Rekurzivně získat počet potomků potomka
+            count += CountAllChildren(parent.GetChild(i));
+        }
+
+        return count;
+    }
     int killsOut;
     // Update is called once per frame
     void Update()
