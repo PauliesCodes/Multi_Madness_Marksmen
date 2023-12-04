@@ -31,5 +31,5 @@ How to play :
 
 Plans:
 
-Adding a database for saving scores.
-Adding multiplayer.
+- Adding a database for saving scores.
+- Adding multiplayer.
