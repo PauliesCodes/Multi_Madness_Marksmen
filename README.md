@@ -8,6 +8,4 @@ The character will be a cat with 3 types of guns.
 - assault rifle
 - shotgun
 
-The bigger the kill strike the less damage the gun will deal.
-There will be a scoreboard with the highest kill streaks in the game.
-More info will be shown.....
+Currently, the game only offers a single-player option where the player has to shoot cats within a time limit. Once the time runs out, the player dies and their kills are displayed. 
