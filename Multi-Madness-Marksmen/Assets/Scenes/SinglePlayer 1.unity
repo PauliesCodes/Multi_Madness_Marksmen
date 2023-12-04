@@ -16016,7 +16016,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b046be8cead1aab419fc979ecb339238, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 133995d1de9432f47a08773bc49fa611, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -17166,7 +17166,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &917291628
 RectTransform:
   m_ObjectHideFlags: 0
@@ -65370,6 +65370,7 @@ MonoBehaviour:
   singlePlayer: 1
   timeOfGame: 0
   timerText: {fileID: 0}
+  maxPlayerScore: 0
 --- !u!114 &8826756980261927069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66568,6 +66569,7 @@ MonoBehaviour:
   singlePlayer: 1
   timeOfGame: 30
   timerText: {fileID: 1611734586}
+  maxPlayerScore: 0
 --- !u!114 &8826756980855411312
 MonoBehaviour:
   m_ObjectHideFlags: 0

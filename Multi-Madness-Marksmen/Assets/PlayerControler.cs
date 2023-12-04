@@ -587,7 +587,7 @@ int CountAllChildren(Transform parent)
 
         disableControls();
 
-        menuMessage.text = "Lets kill them !";
+        menuMessage.text = "Let's kill them !";
 
         isDeath = true;
 

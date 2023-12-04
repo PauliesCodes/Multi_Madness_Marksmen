@@ -10,6 +10,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using UnityEngine.Networking;
+using System.Threading;
 
 
 public class SQLManager : MonoBehaviour
@@ -18,8 +19,12 @@ public class SQLManager : MonoBehaviour
 
     public InputField namee;
     public InputField password;
+    public Button registerButton;
+
     public GameObject error;
     public TextMeshProUGUI errorMessage;
+
+    public GameObject errorWindow;
 
 
     private string conectionString;
@@ -27,11 +32,18 @@ public class SQLManager : MonoBehaviour
     private MySqlCommand MS_Command;
 
 
-    private string secretKey = "mySecretKey";
+    /// <summary>
+    /// private string secretKey = "mySecretKey";
+    /// </summary>
     public string addScoreURL = 
         "http://localhost/HighScoreGame/addscore.php?";
     public string highscoreURL = 
          "http://localhost/HighScoreGame/display.php";
+
+    public string loginURL = "https://mmm.9e.cz/login.php";
+
+    public string registerURL = "https://mmm.9e.cz/registrace.php";
+
     public Text nameTextInput;
     public Text scoreTextInput;
     public Text nameResultText;
@@ -59,9 +71,7 @@ public class SQLManager : MonoBehaviour
 
         if(isValid)
         {
-            // Zde kodik pro zjištění jestli už nahodou jmeno neexistuje a pokud ne tak založení acc
-
-            conection();
+            
         }
         else
         {
@@ -101,21 +111,81 @@ public class SQLManager : MonoBehaviour
         errorMessage.text = errorMassage;
     }
 
-    public void conection(){
 
-        conectionString = "Server = mysql.pearhost.cz ; Database = 7honza_1 ; User = mysql_7honza ; Password = lyx3k5lGR; Charset = utf8;";
-        MS_Conection = new MySqlConnection(conectionString);
-        MS_Conection.Open();
-        if (MS_Conection.State == System.Data.ConnectionState.Open)
+
+    public void CallRegister(){
+
+        
+        StartCoroutine(Register());
+
+
+    }
+
+
+    /*IEnumerator Register(){
+
+        WWWForm form = new WWWForm();
+
+        form.AddField("namee", namee.text);
+        form.AddField("password", password.text);
+
+        WWW www = new WWW("https://mmm.9e.cz/registrace.php", form);
+
+        yield return www;
+
+        Debug.Log(www.text);    
+
+        if(www.text == "Nope"){
+
+            errorWindow.SetActive(true);
+
+            Debug.Log("Obnoto fsdkholjnasdfgkjhsdfhjk");
+
+            //KLDyž se člověk registorvbal dobře
+
+        }else {
+
+
+        }
+
+    }*/
+
+    IEnumerator Register()
+    {
+    List<IMultipartFormSection> formData = new List<IMultipartFormSection>
+    {
+        new MultipartFormDataSection("namee", namee.text),
+        new MultipartFormDataSection("password", password.text)
+    };
+
+    using (UnityWebRequest www = UnityWebRequest.Post("https://mmm.9e.cz/registrace.php", formData))
+    {
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("Connected to MySQL database!");
+            Debug.Log(www.downloadHandler.text);
+
+            if (www.downloadHandler.text == "Nope")
+            {
+                errorWindow.SetActive(true);
+                Debug.Log("Obnoto fsdkholjnasdfgkjhsdfhjk");
+
+                // Když se člověk registroval dobře
+            }
+            else
+            {
+                // Pokud je registrace úspěšná
+            }
         }
         else
         {
-            Debug.Log("Failed to connect to MySQL database!");
+            Debug.LogError("Chyba při spojení se serverem: " + www.error);
         }
     }
-    
+}
+
+/*    
 IEnumerator GetScores()
 {
 	UnityWebRequest hs_get = UnityWebRequest.Get(highscoreURL);
@@ -163,6 +233,6 @@ public string HashInput(string input)
 	string hash_convert = 
              BitConverter.ToString(hashValue).Replace("-", "").ToLower();
 	return hash_convert;
-}
+}*/
 
 }
