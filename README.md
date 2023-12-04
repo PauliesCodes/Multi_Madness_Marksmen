@@ -12,14 +12,14 @@ Currently, the game only offers a single-player option where the player has to s
 
 How to play :
 
-When you open the game, select Play > Singleplayer.
-You then select the weapon you want (just click on it, if you don't select one it will automatically set to assault rifle).
-When your weapon is selected, click "esc" to enter or press the back button.
-In-game you will see your score, remaining time, and ammo stats.
-The game starts after you kill your first enemy (the cat with the red hat).
-After each kill, another enemy will appear randomly on the map.
-When your time limit drops to 0, you will be eliminated and your score will be displayed.
-Now you can tell your friends how good you are or just play again.
+-When you open the game, select Play > Singleplayer.
+-You then select the weapon you want (just click on it, if you don't select one it will automatically set to assault rifle).
+-When your weapon is selected, click "esc" to enter or press the back button.
+-In-game you will see your score, remaining time, and ammo stats.
+-The game starts after you kill your first enemy (the cat with the red hat).
+-After each kill, another enemy will appear randomly on the map.
+-When your time limit drops to 0, you will be eliminated and your score will be displayed.
+-Now you can tell your friends how good you are or just play again.
 
 Plans:
 
