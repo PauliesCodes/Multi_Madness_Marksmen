@@ -47,6 +47,9 @@ public class PlayerControler : MonoBehaviour
 
     public AudioSource dieSound;
 
+    public Camera mainCamera;
+    public Camera topCamera;
+
     //public float health = 100f;
 
     public string[] deathNotes = new string[] {"You done well, you can rest now", "He got you good", "Are you stupid or something ?", "SkILL ISUE", "Just HIT them! its not that hard","Are you blind?","L", "Get better :D", "Cmoon kill them", "Trash!", "Unbelivable", "WHY ARE YOU STILL DIINGGGG?!"};
@@ -72,10 +75,14 @@ public class PlayerControler : MonoBehaviour
 
     public int maxPlayerScore;
 
+private Coroutine countdownCoroutine;
+
     void Start()
     {
         //sem se z databáze uloží max score podle jména
         // do proměné maxScore
+        mainCamera.enabled = true;
+        topCamera.enabled = false;
 
         maxPlayerScore = 0;// sem se to hodí
 
@@ -131,6 +138,23 @@ int CountAllChildren(Transform parent)
     {
         if(Input.GetKeyDown(KeyCode.K)){
             dieByTimer();
+        }
+
+        if(Input.GetKey(KeyCode.Tab)){
+
+            mainCamera.enabled = false;
+            topCamera.enabled = true;
+            deleteAllDamageTexts();
+            removeGuns();
+
+        }else{
+
+            mainCamera.enabled = true;
+            topCamera.enabled = false;
+
+        }
+        if(Input.GetKeyUp(KeyCode.Tab)){
+            equipGun(actualGun);
         }
 
         Menu();
@@ -217,6 +241,7 @@ int CountAllChildren(Transform parent)
         explosionEffect.Play();
         dieSound.Play();
 
+        deleteAllDamageTexts();
         //Zde se před vynulováním porovná data z databáze a s kills, podle toho jeslti bude kills větší tak se tatro hodnota zapíše do databáze
 
         kills = 0;
@@ -322,6 +347,8 @@ int CountAllChildren(Transform parent)
             case 0:{//AK
 
                 wepponAK.GetComponent<Universal_Gun_Script>().isEnabled = true; // Dá aktivní zbran pod zadaným ID
+                wepponAK.GetComponent<Universal_Gun_Script>().zoom.fieldOfView = wepponAK.GetComponent<Universal_Gun_Script>().standartFOV;
+                wepponAK.GetComponent<Universal_Gun_Script>().gunCam.nearClipPlane = 0.01f;
                 wepponAKHolder.SetActive(true);
 
                 break;
@@ -329,6 +356,8 @@ int CountAllChildren(Transform parent)
             case 1:{//SNIPER
 
                 wepponSniper.GetComponent<Universal_Gun_Script>().isEnabled = true;// Dá aktivní zbran pod zadaným ID
+                wepponSniper.GetComponent<Universal_Gun_Script>().zoom.fieldOfView = wepponSniper.GetComponent<Universal_Gun_Script>().standartFOV;
+                wepponSniper.GetComponent<Universal_Gun_Script>().gunCam.nearClipPlane = 0.01f;
                 wepponSniperHolder.SetActive(true);
 
                 break;
@@ -336,6 +365,8 @@ int CountAllChildren(Transform parent)
             case 2:{//SHOTGUN
 
                 wepponShootgun.GetComponent<Universal_Gun_Script>().isEnabled = true;// Dá aktivní zbran pod zadaným ID
+                wepponShootgun.GetComponent<Universal_Gun_Script>().zoom.fieldOfView = wepponShootgun.GetComponent<Universal_Gun_Script>().standartFOV;
+                wepponShootgun.GetComponent<Universal_Gun_Script>().gunCam.nearClipPlane = 0.01f;
                 wepponShootgunHolder.SetActive(true);
 
                 break;
@@ -346,11 +377,17 @@ int CountAllChildren(Transform parent)
 
     }
 
+    private void resetGunFOV(int gunId){
+
+
+
+
+    }
+
     private void disableGuns(){
             foreach(GameObject gun in weppons){//Začne to tím že to zneaktivní všechny zbraně
 
             gun.GetComponent<Universal_Gun_Script>().isEnabled = false;
-
         }
     }
 
@@ -361,7 +398,6 @@ int CountAllChildren(Transform parent)
 
         }
     }   
-
     private void disableControls(){
 
         playerCam.GetComponent<PlayerCam>().isEnabled = false;
@@ -400,6 +436,7 @@ int CountAllChildren(Transform parent)
         foreach(GameObject gun in weppons){//Začne to tím že to zneaktivní všechny zbraně
 
             gun.GetComponent<Universal_Gun_Script>().currentAmmo = gun.GetComponent<Universal_Gun_Script>().magazineSize;
+            gun.GetComponent<Universal_Gun_Script>().reloading = false;
 
         }
 
@@ -564,7 +601,7 @@ int CountAllChildren(Transform parent)
     public void backToGame(){
 
         isInMenu = false;
-        equipGun(selectedGun);
+        equipGun(actualGun);
         enableControls();
         escMenuVisual.SetActive(false);
         settingsMenuVisual.SetActive(false);
@@ -604,7 +641,7 @@ int CountAllChildren(Transform parent)
     void StartCountdown()
     {            
         isCounting = true;
-        StartCoroutine(Countdown());
+        countdownCoroutine = StartCoroutine(Countdown());
     }
 
     IEnumerator Countdown()
@@ -626,8 +663,11 @@ int CountAllChildren(Transform parent)
     }
     public void StopCountdown()
     {
-        isCounting = false;
-        StopAllCoroutines();
+        if(countdownCoroutine != null){
+            isCounting = false;
+            StopCoroutine(countdownCoroutine);
+            countdownCoroutine = null;
+        }
     }
     public void ResetCountdown()
     {
@@ -665,6 +705,7 @@ int CountAllChildren(Transform parent)
 
         }
 
+        deleteAllDamageTexts();
 
         ResetCountdown();
 
@@ -697,6 +738,21 @@ int CountAllChildren(Transform parent)
     private void writePlayerScore(){
 
         menuMessage.text = "Your score : "+kills;
+
+    }
+    public void deleteAllDamageTexts()
+    {
+        // Získá všechny objekty s názvem "TextBox" ve scén
+
+        GameObject[] textBoxCopies = GameObject.FindGameObjectsWithTag("destroyText");
+
+        // Projde všechny získané objekty a odstraní kopie vzorového TextBoxu
+        if(textBoxCopies != null){
+            foreach (GameObject textBoxCopy in textBoxCopies)
+            {
+                Destroy(textBoxCopy);
+            }
+        }
 
     }
 }

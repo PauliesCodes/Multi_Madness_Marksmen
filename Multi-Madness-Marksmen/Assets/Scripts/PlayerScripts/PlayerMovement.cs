@@ -1,6 +1,7 @@
  using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.Networking;
@@ -10,8 +11,9 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
 
-    public float moveSpeed;
-    public float sprintSpeedMultiplayer;
+    public float speed;
+    public float walkSpeed;
+    public float sprintSpeed;
     public float groundDrag;
     public float jumpForce;
     public float jumpCooldown;
@@ -45,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-
+    
     void Update()
     {
         if(isEnabled){
@@ -65,11 +67,11 @@ public class PlayerMovement : MonoBehaviour
                 Invoke(nameof(ResetJump), jumpCooldown);
             }
 
-            if(Input.GetKeyDown(sprintKey)){
-                moveSpeed = moveSpeed * sprintSpeedMultiplayer;
+            if(Input.GetKey(sprintKey)){
+                speed = sprintSpeed;
             }
-            if(Input.GetKeyUp(sprintKey)){
-                moveSpeed = moveSpeed / sprintSpeedMultiplayer;
+            else{
+                speed = walkSpeed;
             }
 
             if(grounded){
@@ -93,17 +95,17 @@ public class PlayerMovement : MonoBehaviour
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         if(grounded){
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * speed * 10f, ForceMode.Force);
         } else if (!grounded){
-                    rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+                    rb.AddForce(moveDirection.normalized * speed * 10f * airMultiplier, ForceMode.Force);
         }
     }
 
     private void SpeedControl(){
         Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-        if(flatVel.magnitude > moveSpeed){
-            Vector3 limitedVel = flatVel.normalized * moveSpeed;
+        if(flatVel.magnitude > speed){
+            Vector3 limitedVel = flatVel.normalized * speed;
             rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
     }

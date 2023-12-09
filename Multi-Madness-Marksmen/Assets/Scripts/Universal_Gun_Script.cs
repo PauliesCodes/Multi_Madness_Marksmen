@@ -5,6 +5,7 @@ using System.Runtime.Versioning;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 
 public class Universal_Gun_Script : MonoBehaviour
@@ -42,6 +43,7 @@ public class Universal_Gun_Script : MonoBehaviour
     public GameObject impactEffect;
     public ParticleSystem MuzzleFlash;
     public GameObject shootingDirection;
+    public GameObject trailDirection;
     public AudioSource soundEffect;
     public AudioSource hitSound;
     public Camera gunCam;
@@ -69,14 +71,14 @@ public class Universal_Gun_Script : MonoBehaviour
 
     private double reloadTimer = 0.0;
 
-    private bool reloading = false;
+    public bool reloading = false;
 
     public float currentAmmo;
 
     private float dispersion;
 
     public int killCount = 0;
-    static bool semiFire = true;
+    static bool semiFire = false;
 
     private bool allreadyKilled = false;
 
@@ -88,10 +90,15 @@ public class Universal_Gun_Script : MonoBehaviour
     public GameObject wepponHolder;
 
     public TextMeshProUGUI noScopeText;
+
+    public TextMeshProUGUI reloadText;
+
     public Transform spawnPointA;
     public Transform spawnPointB;
     public GameObject enemy;
 
+public GameObject textBoxPrefab;
+public GameObject textBoxPrefabHead;
     private void Aim(){
 
         if(Input.GetKey(aimKey) && !reloading){ // Hrac ztaměřil, zbran se mu dá k hlave a bude střílet pořesněji
@@ -148,6 +155,8 @@ public class Universal_Gun_Script : MonoBehaviour
 
             reloadAnim.SetTrigger("ReloadTrigger");
 
+            reloadText.text = "Reloading.."; // požitý noscope text pro reload
+
             reloading = true;
 
             reloadTimer = reloadTime;
@@ -162,6 +171,7 @@ public class Universal_Gun_Script : MonoBehaviour
 
                 reloading = false;
                 currentAmmo = magazineSize;
+                reloadText.text = "";
                 Debug.Log("Im done reloading");
             }
 
@@ -252,7 +262,7 @@ public class Universal_Gun_Script : MonoBehaviour
 
         if (Physics.Raycast(shootingDirection.transform.position, shootingDirection.transform.forward + dispersion_vector, out hit, range)){ // Or dispersion vectopr
 
-            TrailRenderer trail = Instantiate(bulletTrail, shootingDirection.transform.forward + dispersion_vector, Quaternion.identity);
+            TrailRenderer trail = Instantiate(bulletTrail, trailDirection.transform.forward + dispersion_vector, Quaternion.identity);
 
             Healt_Controler target = hit.transform.GetComponent<Healt_Controler>(); // Něco je zde špatně idk co
             // po hitu se nedá player controler, je to shit protože jak je kravina prázdný game object tak to dělá neplechu, zkus dát jako hlavní kravinu model toho hráče tomu dej PlayerControler atd, u toho modelu máš rovnou riugiutbody a capsule colider to by mohlo fachat a taky by to asi vyřešilo problém s sekavýám movementem ale to se uvidí, ok díky jí jdu spat gn xdddddd
@@ -332,7 +342,7 @@ public class Universal_Gun_Script : MonoBehaviour
 
         float time = 0;
 
-        Vector3 startPosition = shootingDirection.transform.position;
+        Vector3 startPosition = trailDirection.transform.position;
 
         while(time < 1){
             Trail.transform.position = Vector3.Lerp(startPosition, Hit.point, time);
@@ -377,7 +387,9 @@ public class Universal_Gun_Script : MonoBehaviour
 
         int textSpeed;
 
-        while (Time.time - startTime < duration)
+        textBox.tag = "destroyText";
+
+        while (Time.time - startTime < duration && textBox != null)
         {
             textSpeed = UnityEngine.Random.Range(70, 100);
 
@@ -403,6 +415,14 @@ public class Universal_Gun_Script : MonoBehaviour
         // Set text to empty string to make it disappear
         SetText("");
     }
+
+    private void OnDisable() {
+        
+        noScopeText.text = "";
+        reloadText.text = "";
+
+    }
+
 }
 
 /* // Pokus o recoil asi změním ted není čas, wepon swing better to do xd
