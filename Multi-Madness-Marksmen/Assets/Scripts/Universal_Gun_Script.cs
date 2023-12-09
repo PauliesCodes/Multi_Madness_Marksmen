@@ -93,6 +93,8 @@ public class Universal_Gun_Script : MonoBehaviour
 
     public TextMeshProUGUI reloadText;
 
+    public TextMeshProUGUI youNeedToReload;
+
     public Transform spawnPointA;
     public Transform spawnPointB;
     public GameObject enemy;
@@ -144,12 +146,7 @@ public GameObject textBoxPrefabHead;
 
     }
 
-    void Update()
-    {
-        if(isEnabled){
-             Aim();
-
-        if(Input.GetKeyDown(reloadKey) && !reloading){
+    void Reload(){
 
             Debug.Log("Reloading....");
 
@@ -160,6 +157,32 @@ public GameObject textBoxPrefabHead;
             reloading = true;
 
             reloadTimer = reloadTime;
+
+            youNeedToReload.text = "";
+            youNeedToReload.color = Color.white;
+
+
+    }
+    void Update()
+    {
+        if(isEnabled){
+             Aim();
+
+        if(currentAmmo < 2 && !reloading){
+
+            youNeedToReload.text = "!Reload!";
+
+            if(currentAmmo == 0){
+
+                youNeedToReload.color = Color.red;
+
+            }
+
+        }
+
+        if(Input.GetKeyDown(reloadKey) && !reloading){
+
+            Reload();
 
         }        
 
