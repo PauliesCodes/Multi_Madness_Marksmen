@@ -1,11 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.Versioning;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 
 public class Universal_Gun_Script : MonoBehaviour
@@ -130,6 +126,12 @@ public GameObject textBoxPrefabHead;
         }
 
     }
+
+    void OnEnable(){
+
+        reloadText.text = "";
+
+    }
     void Start()
     {
         gunCam.nearClipPlane = 0.01f;
@@ -177,7 +179,6 @@ public GameObject textBoxPrefabHead;
                 youNeedToReload.color = Color.red;
 
             }
-
         }
 
         if(Input.GetKeyDown(reloadKey) && !reloading){
@@ -443,7 +444,7 @@ public GameObject textBoxPrefabHead;
         
         noScopeText.text = "";
         reloadText.text = "";
-
+        youNeedToReload.text = "";
     }
 
 }

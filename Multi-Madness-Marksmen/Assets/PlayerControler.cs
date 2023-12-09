@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.Networking;
 
 public class PlayerControler : MonoBehaviour
 {
@@ -268,6 +269,8 @@ int CountAllChildren(Transform parent)
 
     public void respawn(){ // You live only once, dont use it
 
+        menuMessage.color = Color.white;
+
         float a = UnityEngine.Random.Range(spawnPointA.position.x, spawnPointB.position.x);
 
         float b = UnityEngine.Random.Range(spawnPointA.position.z, spawnPointB.position.z);
@@ -437,7 +440,8 @@ int CountAllChildren(Transform parent)
 
             gun.GetComponent<Universal_Gun_Script>().currentAmmo = gun.GetComponent<Universal_Gun_Script>().magazineSize;
             gun.GetComponent<Universal_Gun_Script>().reloading = false;
-
+            gun.GetComponent<Universal_Gun_Script>().reloadText.text = "";
+            gun.GetComponent<Universal_Gun_Script>().youNeedToReload.text = "";
         }
 
     }
@@ -712,8 +716,18 @@ int CountAllChildren(Transform parent)
         explosionEffect.Play();
         dieSound.Play();
 
-        //Zde se před vynulováním porovná data z databáze a s kills, podle toho jeslti bude kills větší tak se tatro hodnota zapíše do databáze
         writePlayerScore();
+
+        if(kills > PlayerInfo.score && PlayerInfo.isLogged){
+
+            menuMessage.color = new Color(1f, 0.847f, 0f);
+
+            menuMessage.text = "New highscore: "+kills+"!!";
+
+            PlayerInfo.score = kills;
+
+            SaveScore();
+        }
 
         kills = 0;
         killCountText.text = "0";
@@ -737,6 +751,8 @@ int CountAllChildren(Transform parent)
 
     private void writePlayerScore(){
 
+        menuMessage.color = Color.white;
+
         menuMessage.text = "Your score : "+kills;
 
     }
@@ -754,5 +770,40 @@ int CountAllChildren(Transform parent)
             }
         }
 
+    }
+    private string serverURL = "https://mmm.9e.cz/TestPHP/";
+
+    public void SaveScore()
+    {
+        StartCoroutine(SaveScoreRequest());
+    }
+    IEnumerator SaveScoreRequest()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("name", PlayerInfo.playerName);
+        form.AddField("score", PlayerInfo.score);
+
+        using (UnityWebRequest www = UnityWebRequest.Post(serverURL + "savescore.php", form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                if(www.downloadHandler.text == "ok"){
+
+                    Debug.Log(www.downloadHandler.text);
+                }
+                else{
+                    
+                Debug.Log("Database conection error, please check your internet conection");
+
+                }
+
+            }
+            else
+            {
+                Debug.Log("Database conection error, please check your internet conection");
+            }
+        }
     }
 }
