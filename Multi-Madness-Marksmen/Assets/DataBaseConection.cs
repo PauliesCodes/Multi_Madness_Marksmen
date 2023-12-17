@@ -316,7 +316,7 @@ public class DataBaseConection : MonoBehaviour
 
     }
 
-    public string targetURL = "https://mmm.9e.cz/stats.php";
+    public string targetURL = "https://mmm.9e.cz/leaderboard/";
     public void OpenURL()
     {
         Application.OpenURL(targetURL);

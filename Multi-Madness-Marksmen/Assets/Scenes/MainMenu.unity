@@ -7430,7 +7430,7 @@ MonoBehaviour:
   popUpTxt: {fileID: 177294023}
   errorWindow: {fileID: 1179269515}
   errorWindowText: {fileID: 1527129089}
-  targetURL: https://mmm.9e.cz/stats.php
+  targetURL: https://mmm.9e.cz/leaderboard/
 --- !u!1 &994872110
 GameObject:
   m_ObjectHideFlags: 0
