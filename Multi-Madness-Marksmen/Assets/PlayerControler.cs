@@ -10,12 +10,14 @@ public class PlayerControler : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public GameObject wepponAK;
-    public GameObject wepponAKHolder;
-    public GameObject wepponSniper;
-    public GameObject wepponSniperHolder;
-    public GameObject wepponShootgun;
-    public GameObject wepponShootgunHolder;
+    //public GameObject wepponAK;
+    //public GameObject wepponAKHolder;
+    //public GameObject wepponSniper;
+    //public GameObject wepponSniperHolder;
+    //public GameObject wepponShootgun;
+    //public GameObject wepponShootgunHolder;
+
+    public Gun_Switch gunSwitchScript;
     public GameObject playerCam;
     public GameObject playerMovement;
     public GameObject escMenuVisual;
@@ -59,12 +61,9 @@ public class PlayerControler : MonoBehaviour
     public int selectedGun = 0;
     public int actualGun;
     public int kills = 0;
-    private int maxAmmo0;
-    private int maxAmmo1;
-    private int maxAmmo2;
     private int ammo;
 
-    public bool isDeath = false;
+    public bool isDeath = true;
     private bool isInMenu = false;
     bool did_it_die;
     public bool singlePlayer = true;
@@ -73,21 +72,20 @@ public class PlayerControler : MonoBehaviour
 
     public TextMeshProUGUI timerText;
     private bool isCounting = false;
-
     public int maxPlayerScore;
+    public string DateOfScore = "";
 
 private Coroutine countdownCoroutine;
 
     void Start()
     {
-        //sem se z databáze uloží max score podle jména
-        // do proměné maxScore
+        gunSwitchScript = GetComponent<Gun_Switch>();
+
         mainCamera.enabled = true;
+
         topCamera.enabled = false;
 
         maxPlayerScore = 0;// sem se to hodí
-
-
 
         // Získání komponenty Transform aktuálního objektu
         Transform myTransform = transform;
@@ -98,26 +96,16 @@ private Coroutine countdownCoroutine;
         // Vypsání počtu všech potomků do konzole
         Debug.Log("Celkový počet potomků: " + totalChildCount);
 
-        weppons = new GameObject[] {wepponAK, wepponSniper, wepponShootgun};
-
-        wepponHolders = new GameObject[] {wepponAKHolder, wepponSniperHolder, wepponShootgunHolder};
-
         actualGun = selectedGun;
 
         killCountText.text = "0";
 
-        displayWepponStats(selectedGun);
-
         healt_Controler.healUp();
-
-        maxAmmo0 = Convert.ToInt32(wepponAK.GetComponent<Universal_Gun_Script>().magazineSize);
-        maxAmmo1 = Convert.ToInt32(wepponSniper.GetComponent<Universal_Gun_Script>().magazineSize);
-        maxAmmo2 = Convert.ToInt32(wepponShootgun.GetComponent<Universal_Gun_Script>().magazineSize);
 
         startSettings();
 
     }
-int CountAllChildren(Transform parent)
+    int CountAllChildren(Transform parent)
     {
         int count = 0;
 
@@ -146,7 +134,7 @@ int CountAllChildren(Transform parent)
             mainCamera.enabled = false;
             topCamera.enabled = true;
             deleteAllDamageTexts();
-            removeGuns();
+            gunSwitchScript.onPlayerEnterMinimap();
 
         }else{
 
@@ -155,11 +143,13 @@ int CountAllChildren(Transform parent)
 
         }
         if(Input.GetKeyUp(KeyCode.Tab)){
-            equipGun(actualGun);
+
+            gunSwitchScript.onPlayerLeaveMinimap();
+
         }
 
         Menu();
-
+/*
         if(singlePlayer){
 
             if(Input.GetKeyDown(KeyCode.E)){
@@ -173,9 +163,9 @@ int CountAllChildren(Transform parent)
 
             }
 
-        }
+        }*/
 
-        killsOut = getKillCount(actualGun);
+        killsOut = gunSwitchScript.currentScore();
         
         if(killsOut != kills){// dal kill dalo by se říct
 
@@ -186,7 +176,7 @@ int CountAllChildren(Transform parent)
                 Debug.Log("Timer on");
             }
 
-            healt_Controler.makeItHarder();
+            //healt_Controler.makeItHarder(); // jen když bych chtěl hp a taky je ubírat
 
             //Zještě bude nahoře proměná do které se zaoplíéše po připojení max score z databáze, poté se bude s hodnotou kills porvnávat a jakmile bude vyšší než  ta v databázi tak se přepíše
 
@@ -237,7 +227,7 @@ int CountAllChildren(Transform parent)
         }
         return did_it_die;
     }*/
-    public void die(){ // i want too :)
+    /*public void die(){ // i want too :)
 
         explosionEffect.Play();
         dieSound.Play();
@@ -248,9 +238,7 @@ int CountAllChildren(Transform parent)
         kills = 0;
         killCountText.text = "0";
 
-        resetKillCount();
-
-        removeGuns();
+        gunSwitchScript
 
         disableControls();
 
@@ -265,9 +253,9 @@ int CountAllChildren(Transform parent)
 
         playerUI.SetActive(false);
 
-    } 
+    } */
 
-    public void respawn(){ // You live only once, dont use it
+    public void respawn(){ // You live only once, dont use it note. mby you can try to be with her in next life. I know its now over, but ......
 
         menuMessage.color = Color.white;
 
@@ -284,16 +272,20 @@ int CountAllChildren(Transform parent)
         playerObject.SetActive(true);
 
         enableControls();
+        
+        string magazineSize = gunSwitchScript.onPlayerRespawn().ToString();
 
-        reloadGuns();
+        currnetAmmo.text = magazineSize;
 
-        actualGun = selectedGun;
+        Debug.Log(currnetAmmo.text + " tolik ted mám");
 
-        equipGun(selectedGun);
+        maxAmmo.text = magazineSize;
 
-        displayWepponStats(selectedGun);
+        //maxAmmo.ForceMeshUpdate();
 
-        changeCatLook(selectedGun);
+        Debug.Log(maxAmmo.text + " tolik je max");
+
+        displayWepponStats();
 
         healt_Controler.restHealth();
 
@@ -319,88 +311,34 @@ int CountAllChildren(Transform parent)
                 if(isInMenu){
 
                     isInMenu = false;
-                    equipGun(actualGun);
+                    gunSwitchScript.onResumeGuns();
                     enableControls();
                     escMenuVisual.SetActive(false);
                     settingsMenuVisual.SetActive(false);
                     playerUI.SetActive(true);
+
+                    Debug.Log("Odchazím z menu");
 
 
                 } else {
 
                     isInMenu = true;
                     disableControls();
-                    disableGuns();
+                    gunSwitchScript.onPauseGuns();
                     menuMessage.text = "Paused, just for you <3 Meow";
                     escMenuVisual.SetActive(true);
                     playerUI.SetActive(false);
+
+                    Debug.Log("Ted jsem v menu");
 
                 }
             }
         }
     }
 
-    private void equipGun(int gunId){
+    
 
 
-        disableGuns();
-
-        switch(gunId){
-
-            case 0:{//AK
-
-                wepponAK.GetComponent<Universal_Gun_Script>().isEnabled = true; // Dá aktivní zbran pod zadaným ID
-                wepponAK.GetComponent<Universal_Gun_Script>().zoom.fieldOfView = wepponAK.GetComponent<Universal_Gun_Script>().standartFOV;
-                wepponAK.GetComponent<Universal_Gun_Script>().gunCam.nearClipPlane = 0.01f;
-                wepponAKHolder.SetActive(true);
-
-                break;
-            }
-            case 1:{//SNIPER
-
-                wepponSniper.GetComponent<Universal_Gun_Script>().isEnabled = true;// Dá aktivní zbran pod zadaným ID
-                wepponSniper.GetComponent<Universal_Gun_Script>().zoom.fieldOfView = wepponSniper.GetComponent<Universal_Gun_Script>().standartFOV;
-                wepponSniper.GetComponent<Universal_Gun_Script>().gunCam.nearClipPlane = 0.01f;
-                wepponSniperHolder.SetActive(true);
-
-                break;
-            }
-            case 2:{//SHOTGUN
-
-                wepponShootgun.GetComponent<Universal_Gun_Script>().isEnabled = true;// Dá aktivní zbran pod zadaným ID
-                wepponShootgun.GetComponent<Universal_Gun_Script>().zoom.fieldOfView = wepponShootgun.GetComponent<Universal_Gun_Script>().standartFOV;
-                wepponShootgun.GetComponent<Universal_Gun_Script>().gunCam.nearClipPlane = 0.01f;
-                wepponShootgunHolder.SetActive(true);
-
-                break;
-            }
-
-        }
-        
-
-    }
-
-    private void resetGunFOV(int gunId){
-
-
-
-
-    }
-
-    private void disableGuns(){
-            foreach(GameObject gun in weppons){//Začne to tím že to zneaktivní všechny zbraně
-
-            gun.GetComponent<Universal_Gun_Script>().isEnabled = false;
-        }
-    }
-
-    private void removeGuns(){
-        foreach(GameObject holder in wepponHolders){//Začne to tím že to zneviditlení všechny zbraně
-
-            holder.SetActive(false);
-
-        }
-    }   
     private void disableControls(){
 
         playerCam.GetComponent<PlayerCam>().isEnabled = false;
@@ -421,139 +359,18 @@ int CountAllChildren(Transform parent)
         menuMessage.text = deathNotes[noteID];
 
     }
+    
+    private void displayWepponStats(){
 
-    public void selectAK(){
-        selectedGun = 0;
-    }
-
-    public void selectSR(){
-        selectedGun = 1;
-    }
-
-    public void selectSG(){
-        selectedGun = 2;
-    }
-
-    private void reloadGuns(){
-
-        foreach(GameObject gun in weppons){//Začne to tím že to zneaktivní všechny zbraně
-
-            gun.GetComponent<Universal_Gun_Script>().currentAmmo = gun.GetComponent<Universal_Gun_Script>().magazineSize;
-            gun.GetComponent<Universal_Gun_Script>().reloading = false;
-            gun.GetComponent<Universal_Gun_Script>().reloadText.text = "";
-            gun.GetComponent<Universal_Gun_Script>().youNeedToReload.text = "";
-        }
-
-    }
-
-    private void resetKillCount(){
-
-        foreach(GameObject gun in weppons){//Začne to tím že to zneaktivní všechny zbraně
-
-            gun.GetComponent<Universal_Gun_Script>().killCount = 0;
-
-        }
-    }
-
-    private int getKillCount(int gunSelected){
-
-        int kills = 0;
-
-        switch(gunSelected){
-
-            case 0:{
-                
-                kills = wepponAK.GetComponent<Universal_Gun_Script>().killCount;
-
-                break;
-            }
-
-            case 1:{
-
-                kills = wepponSniper.GetComponent<Universal_Gun_Script>().killCount;
-
-                break;
-            }
-
-            case 2:{
-
-                kills = wepponShootgun.GetComponent<Universal_Gun_Script>().killCount;
-
-                break;
-            }
-
-        }
-
-        return kills;
-
-    }
-
-    private int getMaxAmmo(int gunSelected){
-
-        int Ammo = 30;
-
-        switch(gunSelected){
-
-            case 0:{
-                
-                Ammo = Convert.ToInt32(wepponAK.GetComponent<Universal_Gun_Script>().magazineSize);
-
-                break;
-            }
-
-            case 1:{
-
-                Ammo = Convert.ToInt32(wepponSniper.GetComponent<Universal_Gun_Script>().magazineSize);
-
-                break;
-            }
-
-            case 2:{
-
-                Ammo = Convert.ToInt32(wepponShootgun.GetComponent<Universal_Gun_Script>().magazineSize);
-
-                break;
-            }
-        }
-
-        return Ammo;
-
-    }
-    private void displayWepponStats(int gunSelected){
-
-        maxAmmo.text = getMaxAmmo(gunSelected).ToString();
-        currnetAmmo.text = getMaxAmmo(gunSelected).ToString();
+        maxAmmo.text = gunSwitchScript.maxAmmo().ToString();
+        currnetAmmo.text = gunSwitchScript.currentAmmo().ToString();
 
     }
 
 
     private void displayCurrentAmmo(int gunSelected){
 
-        int Ammo = 0;
-
-        switch(gunSelected){
-
-            case 0:{
-                
-                Ammo = Convert.ToInt32(wepponAK.GetComponent<Universal_Gun_Script>().currentAmmo);
-
-                break;
-            }
-
-            case 1:{
-
-                Ammo = Convert.ToInt32(wepponSniper.GetComponent<Universal_Gun_Script>().currentAmmo);
-
-                break;
-            }
-
-            case 2:{
-
-                Ammo = Convert.ToInt32(wepponShootgun.GetComponent<Universal_Gun_Script>().currentAmmo);
-
-                break;
-            }
-        }       
+        int Ammo = gunSwitchScript.currentAmmo();
 
         if(ammo != Ammo){
 
@@ -563,10 +380,10 @@ int CountAllChildren(Transform parent)
 
         }
 
-
     }
 
-    private void changeCatLook(int gunSelected){
+/*
+    private void changeCatLook(int gunSelected){ // Ted není potřeba kočka není vidět
 
         Material playerMaterial = akMaterial;
 
@@ -586,7 +403,7 @@ int CountAllChildren(Transform parent)
                 break;
             }
 
-        }       
+        }   
         
         foreach (GameObject objekt in playerParts)
         {
@@ -600,31 +417,31 @@ int CountAllChildren(Transform parent)
             }
         }
 
-    }
+    }*/   
 
     public void backToGame(){
 
-        isInMenu = false;
-        equipGun(actualGun);
-        enableControls();
-        escMenuVisual.SetActive(false);
-        settingsMenuVisual.SetActive(false);
-        playerUI.SetActive(true);
-
         if(isDeath){
-            respawn();
-        }
 
+            respawn();
+
+        }
+        else {
+
+            isInMenu = false;
+            gunSwitchScript.onResumeGuns();
+            enableControls();
+            escMenuVisual.SetActive(false);
+            settingsMenuVisual.SetActive(false);
+            playerUI.SetActive(true);
+
+        }
     }
 
     public void startSettings(){
 
         kills = 0;
         killCountText.text = "0";
-
-        resetKillCount();
-
-        removeGuns();
 
         disableControls();
 
@@ -702,13 +519,6 @@ int CountAllChildren(Transform parent)
     }
     public void dieByTimer(){ // i want too :)
 
-        if(kills > maxPlayerScore){
-
-            //Zde se otevře databáze a přepíše se to pokud to bylo větší 
-
-
-        }
-
         deleteAllDamageTexts();
 
         ResetCountdown();
@@ -732,9 +542,7 @@ int CountAllChildren(Transform parent)
         kills = 0;
         killCountText.text = "0";
 
-        resetKillCount();
-
-        removeGuns();
+        gunSwitchScript.onPlayerDeathGuns();
 
         disableControls();
 
@@ -775,6 +583,16 @@ int CountAllChildren(Transform parent)
 
     public void SaveScore()
     {
+        DateTime date = DateTime.Now;
+
+        DateOfScore = date.ToString();
+
+        Debug.Log("Time : "+DateOfScore);
+
+        PlayerInfo.dateOfScore = DateOfScore;
+
+        Debug.Log(PlayerInfo.dateOfScore);
+
         StartCoroutine(SaveScoreRequest());
     }
     IEnumerator SaveScoreRequest()
@@ -782,8 +600,10 @@ int CountAllChildren(Transform parent)
         WWWForm form = new WWWForm();
         form.AddField("name", PlayerInfo.playerName);
         form.AddField("score", PlayerInfo.score);
+        form.AddField("gun", gunSwitchScript.gunOut());
+        form.AddField("timeofscore", PlayerInfo.dateOfScore);
 
-        using (UnityWebRequest www = UnityWebRequest.Post(serverURL + "savescore.php", form))
+        using (UnityWebRequest www = UnityWebRequest.Post(serverURL + "savescoretest.php", form))
         {
             yield return www.SendWebRequest();
 

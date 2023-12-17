@@ -20,14 +20,17 @@ public class Healt_Controler : MonoBehaviour
 
     void Start(){
 
+        /*
+
         maxHealth = baseHealth;
         health = maxHealth;
         healtNumber.text = health.ToString();
         healtBar.fillAmount = health /maxHealth;
 
+        */
     }
 
-    public bool TakeDamage(float amount){
+    /*public bool TakeDamage(float amount){
 
         bool did_it_die = false;
 
@@ -45,10 +48,10 @@ public class Healt_Controler : MonoBehaviour
             playerControler.die();
         }
         return did_it_die;
-    }
+    }*/
 
     void Update(){
-
+/*
         if(Input.GetKeyDown(KeyCode.G)){
 
             TakeDamage(1);
@@ -59,11 +62,13 @@ public class Healt_Controler : MonoBehaviour
 
             heal();
 
-        }
+        }*/
 
     }
 
     public void heal(){
+
+        /*
 
         health += healAmount;
         health = Mathf.Clamp(health, 0, maxHealth);
@@ -71,17 +76,24 @@ public class Healt_Controler : MonoBehaviour
         healtBar.fillAmount = health /maxHealth;
         healtNumber.text = health.ToString();
 
+        */
+
     }
 
     public void healUp(){
 
+        /*
+
         health = maxHealth;
         healtBar.fillAmount = health /maxHealth;
         healtNumber.text = health.ToString();
+
+        */
     }
 
     public void makeItHarder(){
 
+        /*
         if(maxHealth - 10 > 0){
 
             maxHealth -= 10;
@@ -102,6 +114,7 @@ public class Healt_Controler : MonoBehaviour
                 }
 
             }
+            
 
         }
 
@@ -109,14 +122,20 @@ public class Healt_Controler : MonoBehaviour
         healtBar.fillAmount = health /maxHealth;
         healtNumber.text = health.ToString();
 
+        */
+
     }
 
     public void restHealth(){
+
+        /*
 
         maxHealth = baseHealth;
         health = maxHealth;
         healtBar.fillAmount = health /maxHealth;
         healtNumber.text = health.ToString();
+
+        */
     }
 
 }

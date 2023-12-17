@@ -12,6 +12,7 @@ public class PlayerInfo{
     public static string playerName;
     public static int rank;
     public static bool isLogged = false;
+    public static string dateOfScore = "";
 
 }
 public class DataBaseConection : MonoBehaviour
@@ -49,7 +50,7 @@ public class DataBaseConection : MonoBehaviour
 
     public void RegisterCheck(){
 
-        if(nameInput.text.Count() <= 20 && nameInput.text.Count() >= 3 && passwordInput.text.Count() <= 20 && passwordInput.text.Count() >= 3){
+        if(nameInput.text.Count() <= 14 && nameInput.text.Count() >= 3 && passwordInput.text.Count() <= 20 && passwordInput.text.Count() >= 3){
 
             Register();
 
@@ -315,4 +316,9 @@ public class DataBaseConection : MonoBehaviour
 
     }
 
+    public string targetURL = "https://mmm.9e.cz/stats.php";
+    public void OpenURL()
+    {
+        Application.OpenURL(targetURL);
+    }
 }

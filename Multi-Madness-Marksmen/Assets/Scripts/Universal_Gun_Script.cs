@@ -16,8 +16,8 @@ public class Universal_Gun_Script : MonoBehaviour
     public float aimDispersion = 0.1f;
     public float impactForce = 30f;
     public float fireRate = 8f;
-    public float reloadTime = 2f;
-    public float magazineSize = 30f;
+    public float reloadTime = 1f;
+    public int magazineSize = 30;
     //public float recoilForce = 1.0f;
     //public float recoilDuration = 0.1f;
     public bool fullAuto = true;
@@ -69,7 +69,7 @@ public class Universal_Gun_Script : MonoBehaviour
 
     public bool reloading = false;
 
-    public float currentAmmo;
+    public int currentAmmo = 0;
 
     private float dispersion;
 
@@ -288,7 +288,7 @@ public GameObject textBoxPrefabHead;
 
             TrailRenderer trail = Instantiate(bulletTrail, trailDirection.transform.forward + dispersion_vector, Quaternion.identity);
 
-            Healt_Controler target = hit.transform.GetComponent<Healt_Controler>(); // Něco je zde špatně idk co
+            //Healt_Controler target = hit.transform.GetComponent<Healt_Controler>(); // Něco je zde špatně idk co
             // po hitu se nedá player controler, je to shit protože jak je kravina prázdný game object tak to dělá neplechu, zkus dát jako hlavní kravinu model toho hráče tomu dej PlayerControler atd, u toho modelu máš rovnou riugiutbody a capsule colider to by mohlo fachat a taky by to asi vyřešilo problém s sekavýám movementem ale to se uvidí, ok díky jí jdu spat gn xdddddd
 
             Healt_Controler_Enemy enemyTarget = hit.transform.GetComponent<Healt_Controler_Enemy>();
@@ -301,7 +301,7 @@ public GameObject textBoxPrefabHead;
 
             StartCoroutine(SpawnTrail(trail, hit, layer));
 
-            if(target != null || enemyTarget != null){//Enemytarget pak odstran ted to je jen na test
+            if(enemyTarget != null){//Enemytarget pak odstran ted to je jen na test    target != null || 
 
                 //hit.rigidbody.AddForce(-hit.normal * impactForce);
 
